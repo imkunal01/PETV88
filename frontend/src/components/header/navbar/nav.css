@@ -1,0 +1,8 @@
+.mcdlogo{
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    display: block;
+    background: url(../../assets/images/mcdlogo.png) no-repeat center center;
+    background-size: contain;
+}
