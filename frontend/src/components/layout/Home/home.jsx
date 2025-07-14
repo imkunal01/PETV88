@@ -1,5 +1,5 @@
 import React from 'react';
-import './Home.css';
+import './home.css';
 import mealImage from '../../../assets/ranveer.png'; // use the exact promo image
 
 const Home = () => {
