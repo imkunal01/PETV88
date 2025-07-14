@@ -1,12 +1,145 @@
-# React + Vite
+McDonaldClone/
+├── .gitignore
+├── Backend/
+│   ├── .env
+│   ├── .gitignore
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── cartController.js
+│   │   ├── menuController.js
+│   │   └── orderController.js
+│   ├── index.js
+│   ├── models/
+│   │   ├── Cart.js
+│   │   ├── MenuItem.js
+│   │   └── Order.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── routes/
+│   │   ├── cartRoutes.js
+│   │   ├── menuRoutes.js
+│   │   └── orderRoutes.js
+│   └── seed/
+│       └── menuItemsSeed.js
+├── README.md
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Expanding the ESLint configuration
+├── frontend/
+│   ├── .env
+│   ├── .gitignore
+│   ├── README.md
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public/
+│   │   ├── favicon.svg
+│   │   └── vite.svg
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── assets/
+│   │   │   └── react.svg
+│   │   ├── components/
+│   │   │   ├── cart/
+│   │   │   │   ├── CartItem.jsx
+│   │   │   │   └── CartSummary.jsx
+│   │   │   ├── layout/
+│   │   │   │   ├── Footer.jsx
+│   │   │   │   ├── Header.jsx
+│   │   │   │   └── Layout.jsx
+│   │   │   └── menu/
+│   │   │       ├── CategoryFilter.jsx
+│   │   │       ├── MenuItem.jsx
+│   │   │       └── MenuList.jsx
+│   │   ├── context/
+│   │   │   └── CartContext.jsx
+│   │   ├── index.css
+│   │   ├── main.jsx
+│   │   ├── pages/
+│   │   │   ├── CartPage.jsx
+│   │   │   ├── HomePage.jsx
+│   │   │   ├── MenuPage.jsx
+│   │   │   ├── NotFoundPage.jsx
+│   │   │   ├── OrderConfirmationPage.jsx
+│   │   │   └── OrderHistoryPage.jsx
+│   │   └── services/
+│   │       └── api.js
+│   ├── tailwind.config.js
+│   └── vite.config.js
+└── package.jsonMcDonaldClone/
+├── .gitignore
+├── Backend/
+│   ├── .env
+│   ├── .gitignore
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── cartController.js
+│   │   ├── menuController.js
+│   │   └── orderController.js
+│   ├── index.js
+│   ├── models/
+│   │   ├── Cart.js
+│   │   ├── MenuItem.js
+│   │   └── Order.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── routes/
+│   │   ├── cartRoutes.js
+│   │   ├── menuRoutes.js
+│   │   └── orderRoutes.js
+│   └── seed/
+│       └── menuItemsSeed.js
+├── README.md
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+
+├── frontend/
+│   ├── .env
+│   ├── .gitignore
+│   ├── README.md
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public/
+│   │   ├── favicon.svg
+│   │   └── vite.svg
+│   ├── src/
+│   │   ├── App.jsx
+│   │   ├── assets/
+│   │   │   └── react.svg
+│   │   ├── components/
+│   │   │   ├── cart/
+│   │   │   │   ├── CartItem.jsx
+│   │   │   │   └── CartSummary.jsx
+│   │   │   ├── layout/
+│   │   │   │   ├── Footer.jsx
+│   │   │   │   ├── Header.jsx
+│   │   │   │   └── Layout.jsx
+│   │   │   └── menu/
+│   │   │       ├── CategoryFilter.jsx
+│   │   │       ├── MenuItem.jsx
+│   │   │       └── MenuList.jsx
+│   │   ├── context/
+│   │   │   └── CartContext.jsx
+│   │   ├── index.css
+│   │   ├── main.jsx
+│   │   ├── pages/
+│   │   │   ├── CartPage.jsx
+│   │   │   ├── HomePage.jsx
+│   │   │   ├── MenuPage.jsx
+│   │   │   ├── NotFoundPage.jsx
+│   │   │   ├── OrderConfirmationPage.jsx
+│   │   │   └── OrderHistoryPage.jsx
+│   │   └── services/
+│   │       └── api.js
+│   ├── tailwind.config.js
+│   └── vite.config.js
+└── package.json

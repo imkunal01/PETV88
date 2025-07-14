@@ -1,8 +1,72 @@
-.mcdlogo{
-    width: 100px;
-    height: 100px;
-    margin: 0 auto;
-    display: block;
-    background: url(../../assets/images/mcdlogo.png) no-repeat center center;
-    background-size: contain;
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mcdlogo {
+  position: fixed;   /* Stay fixed on screen */
+  top: 0;
+  left: 0;
+  padding: 10px;
+  z-index: 1000;      /* Keep it above other elements */
+}
+
+.mcdlogo img {
+  width: 100px;       /* Resize as needed */
+  height: auto;
+}
+
+/* Container for your entire nav bar */
+nav {
+  display: flex;
+  justify-content: flex-end; /* align right */
+  align-items: center;
+  background-color: white;
+  padding: 20px 40px;
+  font-family: 'Helvetica Neue', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the ul and li */
+nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  margin: 0 20px;
+}
+
+/* Style the links */
+nav a {
+  text-decoration: none;
+  color: #DA291C; /* McDonald's Red */
+  font-weight: 600;
+  font-size: 18px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+/* Hover effect */
+nav a:hover {
+  color: #FFC72C; /* McDonald's Yellow */
+}
+
+/* Optional underline effect on hover */
+nav a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #FFC72C;
+  transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
 }
