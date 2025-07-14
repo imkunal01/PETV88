@@ -1,0 +1,130 @@
+/* Main Layout */
+.home-banner {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Left Section */
+.home-left {
+  flex: 1;
+  background-color: #ffbc0d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2rem;
+}
+
+.text-wrapper h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 3px #c90000;
+  font-weight: bold;
+}
+
+.text-solid {
+  color: #c90000;
+  font-weight: bold;
+}
+
+/* Arrows */
+.arrows {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.arrow {
+  width: 45px;
+  height: 45px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.arrow.outline {
+  border: 2px solid red;
+  background-color: transparent;
+  color: red;
+}
+
+.arrow.filled {
+  background-color: white;
+  color: red;
+  border: none;
+}
+
+/* Right Section */
+.home-right {
+  flex: 1;
+  background-color: #e4002b;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.promo-image {
+  max-width: 100%;
+  height: auto;
+  object-fit:fill;
+}
+
+.availability {
+  position: absolute;
+  bottom: 2rem;
+  left: 2rem;
+  color: white;
+  font-weight: bold;
+}
+
+.availability h2 {
+  font-size: 1.7rem;
+}
+
+.availability p {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon {
+  font-size: 1rem;
+}
+
+/* Responsive Behavior */
+@media (max-width: 768px) {
+  .home-banner {
+    flex-direction: column;
+  }
+
+  .home-left, .home-right {
+    width: 100%;
+    flex: none;
+  }
+
+  .text-wrapper h1 {
+    text-align: center;
+  }
+
+  .arrows {
+    justify-content: center;
+  }
+
+  .availability {
+    position: static;
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+}

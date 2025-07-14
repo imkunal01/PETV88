@@ -9,64 +9,55 @@
   top: 0;
   left: 0;
   padding: 10px;
-  z-index: 1000;      /* Keep it above other elements */
+  z-index: 1000;
 }
 
 .mcdlogo img {
   width: 100px;       /* Resize as needed */
   height: auto;
 }
-
-/* Container for your entire nav bar */
-nav {
-  display: flex;
-  justify-content: flex-end; /* align right */
-  align-items: center;
-  background-color: white;
-  padding: 20px 40px;
-  font-family: 'Helvetica Neue', sans-serif;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.mcdlogo img:hover {
+  transform: scale(1.5); /* Slightly enlarge on hover */
+  transition: transform 0.3s; /* Smooth transition */
+  
+}
+.navlinks {
+  position: fixed;   /* Stay fixed on screen */
+  top: 0;
+  right: 0;
+  padding: 30px;
+  z-index: 1000;      /* Keep it above other elements */
+}
+.navlinks ul {
+  list-style: none;  /* Remove default list styles */
+  display: flex;     /* Display items in a row */
+  gap: 40px;         /* Space between items */
+}
+.navlinks li {
+  display: inline;   /* Display items inline */
+}
+.navlinks a {
+  text-decoration: none; /* Remove underline */
+  color: #FFCC00;         /* Text color */
+  font-weight: bold;  
+  font-size: 20px;       /* Font size */
+  transition: color 0.3s; /* Smooth color transition */
+  padding: 10px;        /* Padding for clickable area */
+}
+.navlinks a:hover {
+  color: red;
+  text-decoration:overline; /* Underline on hover */
+  
+  
+}
+.navlinks a:active {
+  color: rgb(0, 0, 0);
+  text-decoration: none; /* Remove underline on click */
+  transform: scale(0.9); /* Slightly shrink on click */
+}
+.navlinks a:focus {
+  text-decoration:overline; /* Underline on hover */
+  outline: none; /* Remove focus outline */
 }
 
-/* Style the ul and li */
-nav ul {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
 
-nav li {
-  margin: 0 20px;
-}
-
-/* Style the links */
-nav a {
-  text-decoration: none;
-  color: #DA291C; /* McDonald's Red */
-  font-weight: 600;
-  font-size: 18px;
-  position: relative;
-  transition: color 0.3s ease;
-}
-
-/* Hover effect */
-nav a:hover {
-  color: #FFC72C; /* McDonald's Yellow */
-}
-
-/* Optional underline effect on hover */
-nav a::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -4px;
-  left: 0;
-  background-color: #FFC72C;
-  transition: width 0.3s ease;
-}
-
-nav a:hover::after {
-  width: 100%;
-}
