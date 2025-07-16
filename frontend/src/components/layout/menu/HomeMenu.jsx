@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './HomeMenu.css';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 import burger1 from '../../../assets/veg.png';
 import burger2 from '../../../assets/mcaloo-tikki.png';
 import burger3 from '../../../assets/mcchicken.png';
@@ -10,8 +11,10 @@ import mcArch from '../../../assets/mcdlogo.svg';
 
 const meals = [
   {
+    _id: 'b1',
     name: 'Veg Surprise Burger',
     description: 'A scrumptious potato patty topped with a delectable Italian herb sauce and shredded onions placed between perfectly toasted buns.',
+    price: 129,
     size: '132g',
     allergens: 'Cereal containing gluten, Milk, Soya',
     image: burger1,
@@ -23,8 +26,10 @@ const meals = [
     }
   },
   {
+    _id: 'b2',
     name: 'McAloo Tikki Burger',
     description: 'Delicious aloo tikki patty with tangy sauces and crisp veggies in a toasted bun.',
+    price: 149,
     size: '150g',
     allergens: 'Gluten, Soya',
     image: burger2,
@@ -36,8 +41,10 @@ const meals = [
     }
   },
   {
+    _id: 'b3',
     name: 'McChicken Burger',
     description: 'Tender and juicy chicken patty with creamy mayo and shredded lettuce.',
+    price: 199,
     size: '170g',
     allergens: 'Egg, Milk, Gluten',
     image: burger3,
@@ -49,8 +56,10 @@ const meals = [
     }
   },
   {
+    _id: 'b4',
     name: 'McVeggie Burger',
     description: 'A wholesome patty of potatoes, peas, carrots and beans, spiced and crumb-coated.',
+    price: 179,
     size: '160g',
     allergens: 'Gluten, Soya',
     image: burger4,
@@ -62,8 +71,10 @@ const meals = [
     }
   },
   {
+    _id: 'b5',
     name: 'Butter Chicken Grilled Burger',
     description: 'Spicy grilled chicken patty topped with creamy butter chicken sauce.',
+    price: 229,
     size: '180g',
     allergens: 'Milk, Gluten',
     image: burger5,
@@ -84,9 +95,9 @@ const HomeMenu = () => {
   const nextMeal = () => setIndex((index + 1) % meals.length);
   const prevMeal = () => setIndex((index - 1 + meals.length) % meals.length);
 
-  const handleAddToCart = () => {
-    console.log(`Added ${meal.name} to cart`);
-    setMessage(`${meal.name} added to cart! ✅`);
+  const handleViewDetails = () => {
+    toast.success(`${meal.name} details viewed!`);
+    setMessage(`${meal.name} details viewed! ✅`);
     setTimeout(() => setMessage(''), 3000);
   };
 
@@ -141,8 +152,8 @@ const HomeMenu = () => {
             ))}
           </div>
 
-          <button className="add-to-cart" onClick={handleAddToCart}>Add to Cart 🛒</button>
-          {message && <p className="cart-message">{message}</p>}
+          <button className="view-details" onClick={handleViewDetails}>View Details 🔍</button>
+          {message && <p className="details-message">{message}</p>}
         </motion.div>
 
         <motion.div

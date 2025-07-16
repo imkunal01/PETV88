@@ -205,15 +205,15 @@
   color: #fff;
 }
 
-/* Cart Message */
-.cart-message {
+/* Details Message */
+.details-message {
   margin-top: 0.75rem;
   font-weight: bold;
   color: green;
 }
 
-/* Add to Cart Button */
-.add-to-cart {
+/* View Details Button */
+.view-details {
   background: #ffbc0d;
   border: none;
   padding: 0.6rem 1.2rem;

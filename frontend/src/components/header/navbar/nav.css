@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+.container {
+  width: 100%;
+  position: relative;
+  z-index: 1000;
+}
+
 .mcdlogo {
   position: fixed;   /* Stay fixed on screen */
   top: 0;
@@ -21,12 +27,20 @@
   transition: transform 0.3s; /* Smooth transition */
   
 }
-.navlinks {
+.navbar {
   position: fixed;   /* Stay fixed on screen */
   top: 0;
   right: 0;
-  padding: 30px;
+  left: 0;
+  padding: 20px 30px;
   z-index: 1000;      /* Keep it above other elements */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navlinks {
+  margin-left: auto;
 }
 .navlinks ul {
   list-style: none;  /* Remove default list styles */
@@ -58,6 +72,182 @@
 .navlinks a:focus {
   text-decoration:overline; /* Underline on hover */
   outline: none; /* Remove focus outline */
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  margin-left: 2rem;
+}
+
+.auth-links {
+  display: flex;
+  gap: 1rem;
+  margin-right: 1rem;
+}
+
+.login-btn, .signup-btn {
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.login-btn {
+  color: #333;
+  background-color: transparent;
+  border: 1px solid #ddd;
+}
+
+.login-btn:hover {
+  background-color: #f5f5f5;
+  border-color: #ccc;
+  text-decoration: none;
+}
+
+.signup-btn {
+  color: white;
+  background-color: #FF5C00;
+  border: 1px solid #FF5C00;
+}
+
+.signup-btn:hover {
+  background-color: #E05000;
+  border-color: #E05000;
+  text-decoration: none;
+}
+
+.user-menu {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.user-info:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.user-info svg {
+  color: #FF5C00;
+}
+
+.user-info span {
+  color: #333;
+  font-weight: 600;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  min-width: 150px;
+  display: none;
+  z-index: 1001;
+}
+
+.user-menu:hover .dropdown-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-menu a, .dropdown-menu button {
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.9rem;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 4px;
+}
+
+.dropdown-menu a:hover, .dropdown-menu button:hover {
+  background-color: #f5f5f5;
+  color: #FF5C00;
+  text-decoration: none;
+}
+
+.dropdown-menu button {
+  color: #d32f2f;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .navlinks ul {
+    gap: 20px;
+  }
+  
+  .navlinks a {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .mcdlogo img {
+    width: 80px;
+  }
+  
+  .navlinks {
+    order: 3;
+    width: 100%;
+    margin-top: 15px;
+  }
+  
+  .navlinks ul {
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  .navlinks a {
+    font-size: 14px;
+    padding: 5px;
+  }
+  
+  .nav-right {
+    margin-left: auto;
+    margin-right: 0;
+  }
+  
+  .auth-links {
+    gap: 0.5rem;
+  }
+  
+  .login-btn, .signup-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-links {
+    display: none;
+  }
+  
+  .user-info span {
+    display: none;
+  }
 }
 
 

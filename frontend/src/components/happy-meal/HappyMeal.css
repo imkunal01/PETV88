@@ -1,0 +1,357 @@
+.happy-meal-page {
+  min-height: calc(100vh - 80px);
+}
+
+.happy-meal-hero {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../../assets/happy-meal-hero.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.hero-content h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content h1 span {
+  font-size: 1.5rem;
+  vertical-align: super;
+}
+
+.hero-content p {
+  font-size: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.offers-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem 3rem;
+}
+
+.offers-container h2 {
+  text-align: center;
+  color: #333;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.offers-container h2:after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: #FF5C00;
+  margin: 0.5rem auto 0;
+}
+
+.offers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.offer-card {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.offer-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.offer-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  z-index: 1;
+}
+
+.offer-badge.popular {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.offer-badge.limited-time {
+  background-color: #FF5C00;
+  color: white;
+}
+
+.offer-badge.best-value {
+  background-color: #2196F3;
+  color: white;
+}
+
+.offer-badge.new {
+  background-color: #9C27B0;
+  color: white;
+}
+
+.offer-image {
+  height: 200px;
+  overflow: hidden;
+}
+
+.offer-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.offer-card:hover .offer-image img {
+  transform: scale(1.05);
+}
+
+.offer-content {
+  padding: 1.5rem;
+}
+
+.offer-content h3 {
+  margin: 0 0 0.75rem 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.offer-content p {
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.offer-price {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.current-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #FF5C00;
+}
+
+.original-price {
+  font-size: 1.1rem;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.offer-timer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0;
+  border-top: 1px dashed #eee;
+  border-bottom: 1px dashed #eee;
+}
+
+.toy-selection {
+  margin-bottom: 1.5rem;
+}
+
+.toy-selection label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.toy-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.toy-option {
+  background-color: #f5f5f5;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.toy-option:hover {
+  background-color: #eee;
+}
+
+.toy-option.selected {
+  background-color: rgba(255, 92, 0, 0.1);
+  border-color: #FF5C00;
+  color: #FF5C00;
+  font-weight: 600;
+}
+
+.view-details-btn {
+  width: 100%;
+  background-color: #FF5C00;
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.view-details-btn:hover {
+  background-color: #E05000;
+}
+
+.promo-section {
+  background-color: #f9f9f9;
+  padding: 4rem 2rem;
+  margin-top: 3rem;
+}
+
+.promo-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.promo-content h2 {
+  text-align: center;
+  color: #333;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.promo-content h2:after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: #FF5C00;
+  margin: 0.5rem auto 0;
+}
+
+.promo-content ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.promo-content li {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.promo-content li svg {
+  color: #FF5C00;
+  font-size: 1.5rem;
+  margin-top: 0.25rem;
+}
+
+.promo-content li h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.promo-content li p {
+  margin: 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .happy-meal-hero {
+    height: 350px;
+  }
+  
+  .hero-content h1 {
+    font-size: 3rem;
+  }
+  
+  .hero-content p {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .happy-meal-hero {
+    height: 300px;
+  }
+  
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-content p {
+    font-size: 1.1rem;
+  }
+  
+  .offers-container {
+    padding: 0 1rem 2rem;
+  }
+  
+  .offers-container h2,
+  .promo-content h2 {
+    font-size: 2rem;
+  }
+  
+  .promo-section {
+    padding: 3rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .happy-meal-hero {
+    height: 250px;
+  }
+  
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-content p {
+    font-size: 1rem;
+  }
+  
+  .offers-container h2,
+  .promo-content h2 {
+    font-size: 1.8rem;
+  }
+  
+  .offer-content h3 {
+    font-size: 1.3rem;
+  }
+}
