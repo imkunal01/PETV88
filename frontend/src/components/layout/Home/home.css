@@ -148,7 +148,7 @@
 }
 
 .home-right:hover .promo-image {
-  transform: scale(1.05) rotate(2deg);
+  transform: scale(1.5) rotate(2deg);
 }
 
 .availability {

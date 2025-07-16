@@ -1,92 +1,94 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+body {
+  padding-top: 100px; /* Compensate for fixed navbar */
+  overflow-x: hidden;
+}
+
+/* Container wraps logo and navbar */
 .container {
+  max-width: 1200px;
+  margin: 0 auto;
   width: 100%;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: relative;
   z-index: 1000;
 }
 
-.mcdlogo {
-  position: fixed;   /* Stay fixed on screen */
+/* Navbar */
+.navbar {
+  position: fixed;
   top: 0;
   left: 0;
-  padding: 10px;
-  z-index: 1000;
+  width: 100%;
+  background-color: white;
+  padding: 20px 0;
+  z-index: 999;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+/* Logo */
 .mcdlogo img {
-  width: 100px;       /* Resize as needed */
+  width: 100px;
   height: auto;
+  transition: transform 0.3s;
 }
 .mcdlogo img:hover {
-  transform: scale(1.5); /* Slightly enlarge on hover */
-  transition: transform 0.3s; /* Smooth transition */
-  
-}
-.navbar {
-  position: fixed;   /* Stay fixed on screen */
-  top: 0;
-  right: 0;
-  left: 0;
-  padding: 20px 30px;
-  z-index: 1000;      /* Keep it above other elements */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  transform: scale(1.2);
 }
 
-.navlinks {
-  margin-left: auto;
-}
+/* Navigation links */
 .navlinks ul {
-  list-style: none;  /* Remove default list styles */
-  display: flex;     /* Display items in a row */
-  gap: 40px;         /* Space between items */
+  list-style: none;
+  display: flex;
+  gap: 40px;
 }
 .navlinks li {
-  display: inline;   /* Display items inline */
+  display: inline;
 }
 .navlinks a {
-  text-decoration: none; /* Remove underline */
-  color: #FFCC00;         /* Text color */
-  font-weight: bold;  
-  font-size: 20px;       /* Font size */
-  transition: color 0.3s; /* Smooth color transition */
-  padding: 10px;        /* Padding for clickable area */
+  text-decoration: none;
+  color: #FFCC00;
+  font-weight: bold;
+  font-size: 20px;
+  transition: color 0.3s;
+  padding: 10px;
 }
 .navlinks a:hover {
   color: red;
-  text-decoration:overline; /* Underline on hover */
-  
-  
+  text-decoration: overline;
 }
 .navlinks a:active {
-  color: rgb(0, 0, 0);
-  text-decoration: none; /* Remove underline on click */
-  transform: scale(0.9); /* Slightly shrink on click */
+  color: #000;
+  transform: scale(0.9);
 }
 .navlinks a:focus {
-  text-decoration:overline; /* Underline on hover */
-  outline: none; /* Remove focus outline */
+  text-decoration: overline;
+  outline: none;
 }
 
+/* Auth and user */
 .nav-right {
   display: flex;
   align-items: center;
-  margin-left: 2rem;
+  gap: 1rem;
 }
 
 .auth-links {
   display: flex;
   gap: 1rem;
-  margin-right: 1rem;
 }
 
-.login-btn, .signup-btn {
+.login-btn,
+.signup-btn {
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 5px;
@@ -97,14 +99,13 @@
 
 .login-btn {
   color: #333;
-  background-color: transparent;
+  background: transparent;
   border: 1px solid #ddd;
 }
 
 .login-btn:hover {
   background-color: #f5f5f5;
   border-color: #ccc;
-  text-decoration: none;
 }
 
 .signup-btn {
@@ -116,12 +117,10 @@
 .signup-btn:hover {
   background-color: #E05000;
   border-color: #E05000;
-  text-decoration: none;
 }
 
 .user-menu {
   position: relative;
-  margin-right: 1rem;
 }
 
 .user-info {
@@ -147,6 +146,7 @@
   font-weight: 600;
 }
 
+/* Dropdown */
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -158,19 +158,19 @@
   min-width: 150px;
   display: none;
   z-index: 1001;
+  flex-direction: column;
 }
 
 .user-menu:hover .dropdown-menu {
   display: flex;
-  flex-direction: column;
 }
 
-.dropdown-menu a, .dropdown-menu button {
+.dropdown-menu a,
+.dropdown-menu button {
   padding: 0.75rem 1rem;
   text-decoration: none;
   color: #333;
   font-size: 0.9rem;
-  text-align: left;
   background: none;
   border: none;
   cursor: pointer;
@@ -178,63 +178,53 @@
   border-radius: 4px;
 }
 
-.dropdown-menu a:hover, .dropdown-menu button:hover {
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
   background-color: #f5f5f5;
   color: #FF5C00;
-  text-decoration: none;
 }
 
 .dropdown-menu button {
   color: #d32f2f;
 }
 
-/* Responsive styles */
+/* Responsive */
 @media (max-width: 992px) {
   .navlinks ul {
     gap: 20px;
   }
-  
   .navlinks a {
     font-size: 16px;
   }
 }
 
 @media (max-width: 768px) {
-  .navbar {
-    padding: 15px;
+  .container {
     flex-wrap: wrap;
-  }
-  
-  .mcdlogo img {
-    width: 80px;
-  }
-  
-  .navlinks {
-    order: 3;
-    width: 100%;
-    margin-top: 15px;
-  }
-  
-  .navlinks ul {
-    justify-content: space-between;
     gap: 10px;
   }
-  
+
+  .navlinks {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .navlinks ul {
+    justify-content: space-around;
+    gap: 10px;
+  }
+
   .navlinks a {
     font-size: 14px;
-    padding: 5px;
+    padding: 6px;
   }
-  
-  .nav-right {
-    margin-left: auto;
-    margin-right: 0;
-  }
-  
+
   .auth-links {
     gap: 0.5rem;
   }
-  
-  .login-btn, .signup-btn {
+
+  .login-btn,
+  .signup-btn {
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
   }
@@ -244,10 +234,8 @@
   .auth-links {
     display: none;
   }
-  
+
   .user-info span {
     display: none;
   }
 }
-
-
