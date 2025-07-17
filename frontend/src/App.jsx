@@ -84,12 +84,13 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/happy-meal" element={<HappyMeal />} />
+         <Route path="/menu" element={<Menu />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/orders" element={<Orders />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/orders" element={<Orders />} />
+         
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment/:orderId" element={<Payment />} />
           <Route path="/order-success/:orderId" element={<OrderSuccess />} />

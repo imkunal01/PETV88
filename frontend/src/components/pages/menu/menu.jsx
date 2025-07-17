@@ -4,6 +4,21 @@ import { toast } from 'react-hot-toast';
 import { useCart } from '../../../context/CartContext';
 import CategoryFilter from '../../layout/menu/CategoryFilter';
 import MenuList from '../../layout/menu/MenuList';
+import vegSurprise from '../../../assets/vegSurprise.jpg';
+import alooTikki from  '../../../assets/alooTikki.jpg';
+import chickenBurger from  '../../../assets/chickenBurger.webp'
+import chickenGrilledBurger from  '../../../assets/chickenGrilledBurger.png';
+import frenchFries from  '../../../assets/Classic-fries.jpg';
+import chickenMcnuggets from  '../../../assets/chickenMcnuggets.webp';
+import piriPiri from  '../../../assets/piri-piri.jpg';
+import cocaCola from  '../../../assets/cocaCola.webp';
+import macFurry from '../../../assets/McFlurry.jpg'
+import mcIcedLatte from '../../../assets/mcLatter.png'
+import sprite from '../../../assets/sprite.webp'
+import sundae from '../../../assets/sundae.jpg'
+import brownie from '../../../assets/brownie.jpg'
+
+
 import './menu.css';
 
 
@@ -14,7 +29,7 @@ const menuItems = [
     description: 'A scrumptious potato patty topped with a delectable Italian herb sauce.',
     price: 129,
     category: 'Burgers',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/McAloo-Tikki-Burger.jpg',
+    image: vegSurprise,
     isVegetarian: true,
     isPopular: true
   },
@@ -23,8 +38,8 @@ const menuItems = [
     name: 'McAloo Tikki Burger',
     description: 'Delicious aloo tikki patty with tangy sauces and crisp veggies in a toasted bun.',
     price: 149,
-    category: 'Burgers',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/McAloo-Tikki-Burger.jpg',
+    category: 'Burger',
+    image: alooTikki,
     isVegetarian: true,
     isPopular: true
   },
@@ -34,7 +49,7 @@ const menuItems = [
     description: 'Tender and juicy chicken patty with creamy mayo and shredded lettuce.',
     price: 199,
     category: 'Burgers',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/McChicken-Burger.jpg',
+    image: chickenBurger,
     isVegetarian: false,
     isPopular: true
   },
@@ -54,7 +69,7 @@ const menuItems = [
     description: 'Spicy grilled chicken patty topped with creamy butter chicken sauce.',
     price: 229,
     category: 'Burgers',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/Chicken-Maharaja-Mac.jpg',
+    image: chickenGrilledBurger,
     isVegetarian: false,
     isPopular: true
   },
@@ -65,7 +80,7 @@ const menuItems = [
     description: 'Golden, crispy, and perfectly salted French fries.',
     price: 99,
     category: 'Sides',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/French-Fries.jpg',
+    image: frenchFries,
     isVegetarian: true,
     isPopular: true
   },
@@ -75,7 +90,7 @@ const menuItems = [
     description: 'Tender, juicy chicken nuggets with a crispy coating.',
     price: 159,
     category: 'Sides',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/Chicken-McNuggets.jpg',
+    image: chickenMcnuggets,
     isVegetarian: false,
     isPopular: true
   },
@@ -85,7 +100,7 @@ const menuItems = [
     description: 'Spice up your fries with this zesty piri piri mix.',
     price: 25,
     category: 'Sides',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/Piri-Piri-Spice-Mix.jpg',
+    image: piriPiri,
     isVegetarian: true,
     isPopular: false
   },
@@ -96,7 +111,7 @@ const menuItems = [
     description: 'Refreshing Coca-Cola to complement your meal.',
     price: 89,
     category: 'Beverages',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/Coca-Cola.jpg',
+    image: cocaCola,
     isVegetarian: true,
     isPopular: true
   },
@@ -106,7 +121,7 @@ const menuItems = [
     description: 'Crisp, refreshing lemon-lime flavored Sprite.',
     price: 89,
     category: 'Beverages',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/Sprite.jpg',
+    image: sprite,
     isVegetarian: true,
     isPopular: false
   },
@@ -116,7 +131,7 @@ const menuItems = [
     description: 'Smooth, cold coffee with a perfect blend of cream and sweetness.',
     price: 159,
     category: 'Beverages',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/McCafe-Iced-Coffee.jpg',
+    image: mcIcedLatte,
     isVegetarian: true,
     isPopular: true
   },
@@ -128,7 +143,7 @@ const menuItems = [
     description: 'Creamy vanilla soft serve with crunchy Oreo cookie pieces.',
     price: 129,
     category: 'Desserts',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/McFlurry-with-Oreo.jpg',
+    image: macFurry,
     isVegetarian: true,
     isPopular: true
   },
@@ -138,7 +153,7 @@ const menuItems = [
     description: 'Creamy vanilla soft serve topped with hot fudge sauce.',
     price: 99,
     category: 'Desserts',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/Soft-Serve-Hot-Fudge-Sundae.jpg',
+    image: sundae,
     isVegetarian: true,
     isPopular: true
   },
@@ -148,7 +163,7 @@ const menuItems = [
     description: 'Warm chocolate brownie topped with vanilla soft serve and hot fudge sauce.',
     price: 159,
     category: 'Desserts',
-    image: 'https://mcdonaldsblog.in/wp-content/uploads/2022/01/Brownie-Hot-Fudge.jpg',
+    image: brownie,
     isVegetarian: true,
     isPopular: false
   }
