@@ -1,7 +1,7 @@
 /* Main Layout */
 .home-container {
   width: 100%;
-  height: 100vh;
+  height: 90vh;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
@@ -16,7 +16,7 @@
 
 .home-section {
   width: 100%;
-  height: 100vh;
+  height: 90vh;
   scroll-snap-align: start;
   position: relative;
   overflow: hidden;
@@ -38,15 +38,15 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.767);
   border: 2px solid rgba(0, 0, 0, 0.3);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .nav-dot.active {
-  background-color: #e4002b;
-  border-color: #e4002b;
+  background-color: #e4ba00;
+  border-color: #e4ba00;
   transform: scale(1.2);
 }
 
@@ -56,6 +56,9 @@
   flex-wrap: wrap;
   width: 100%;
   min-height: 100vh;
+  position: relative;
+  background-color: #f8f8f8;
+  padding-bottom: 200px;
 }
 
 /* Left Section */
@@ -145,16 +148,22 @@
   padding: 2rem;
 }
 
-.promo-image {
+.promo-video {
+  width: 100%;
   max-width: 100%;
   height: auto;
-  object-fit: contain;
+  object-fit: cover; /* or 'contain' depending on your layout */
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
   transition: transform 0.5s ease;
+  display: block;
 }
 
-.home-right:hover .promo-image {
-  transform: scale(1.5) rotate(2deg);
+/* Optional hover effect */
+.home-right:hover .promo-video {
+  transform: scale(1.05) rotate(1deg);
 }
+
 
 .availability {
   position: absolute;
@@ -202,25 +211,52 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 2rem;
+  padding: 10rem;
 }
 
 /* About Section */
 .about-section {
   background-color: #fff;
+  padding: 3rem 1rem;
+  overflow: hidden;
 }
 
 .about-container {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   gap: 3rem;
-  padding: 2rem;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeUp 1s ease-in-out forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .about-text {
   flex: 1;
+  min-width: 280px;
+  animation: slideLeft 1s ease forwards;
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .about-text h2 {
@@ -242,31 +278,47 @@
   font-weight: 600;
   text-decoration: none;
   border-bottom: 2px solid transparent;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s ease, transform 0.3s ease;
 }
 
 .learn-more:hover {
   border-color: #e4002b;
+  transform: translateY(-2px);
 }
 
 .about-image {
   flex: 1;
+  min-width: 280px;
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: slideRight 1s ease forwards;
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .image-container {
   position: relative;
   width: 300px;
   height: 300px;
+  perspective: 1000px;
 }
 
 .image-box {
   position: absolute;
   width: 200px;
   height: 200px;
-  border-radius: 10px;
+  border-radius: 12px;
+  transition: transform 0.5s ease, box-shadow 0.4s ease;
 }
 
 .image-box.red {
@@ -283,6 +335,39 @@
   left: 0;
   z-index: 0;
   transform: rotate(-15deg);
+}
+
+/* Hover Animation for image boxes */
+.image-container:hover .image-box.red {
+  transform: rotate(15deg) scale(1.05) translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.image-container:hover .image-box.yellow {
+  transform: rotate(-15deg) scale(1.05) translateY(10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about-text h2 {
+    font-size: 2rem;
+  }
+
+  .image-container {
+    width: 250px;
+    height: 250px;
+  }
+
+  .image-box {
+    width: 160px;
+    height: 160px;
+  }
 }
 
 /* Contact Section */

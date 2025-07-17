@@ -5,9 +5,8 @@ import toast from 'react-hot-toast';
 import CategoryFilter from '../../layout/menu/CategoryFilter';
 import MenuList from '../../layout/menu/MenuList';
 
-// Sample menu items with categories
+
 const menuItems = [
-  // Burgers
   {
     _id: 'b1',
     name: 'Veg Surprise Burger',
@@ -59,7 +58,6 @@ const menuItems = [
     isPopular: true
   },
   
-  // Sides
   {
     _id: 's1',
     name: 'French Fries',
@@ -91,7 +89,6 @@ const menuItems = [
     isPopular: false
   },
   
-  // Beverages
   {
     _id: 'd1',
     name: 'Coca-Cola',
@@ -123,7 +120,7 @@ const menuItems = [
     isPopular: true
   },
   
-  // Desserts
+
   {
     _id: 'ds1',
     name: 'McFlurry with Oreo',
@@ -161,10 +158,9 @@ const Menu = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [isVegOnly, setIsVegOnly] = useState(false);
   
-  // Get unique categories
+
   const categories = ['All', ...new Set(menuItems.map(item => item.category))];
   
-  // Filter items based on selected category and veg filter
   useEffect(() => {
     let filtered = [...menuItems];
     

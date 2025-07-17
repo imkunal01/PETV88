@@ -1,58 +1,77 @@
-import './App.css';
-import Nav from './components/header/navbar/nav.jsx';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import Home from './components/layout/Home/home.jsx';
-import Menu from './components/pages/menu/menu.jsx';
-import Login from './components/auth/Login';
-import Signup from './components/auth/Signup';
-import HappyMeal from './components/happy-meal/HappyMeal';
-import Profile from './components/profile/Profile';
-import Orders from './components/orders/Orders';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import { useAuth } from './context/AuthContext';
-import { useEffect, useState } from 'react';
-import { fetchMenu } from '../src/api.js';
+import "./App.css";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import Nav from "./components/header/navbar/nav.jsx";
+import Home from "./components/layout/Home/home.jsx";
+import Menu from "./components/pages/menu/menu.jsx";
+import Login from "./components/auth/Login";
+import Signup from "./components/auth/Signup";
+import HappyMeal from "./components/happy-meal/HappyMeal";
+import Profile from "./components/profile/Profile";
+import Orders from "./components/orders/Orders";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import mcdgif from "./assets/mcgif.gif";
+import { useAuth } from "./context/AuthContext";
+import { fetchMenu } from "./api";
+
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   const { loading } = useAuth();
   const location = useLocation();
   const [menu, setMenu] = useState([]);
 
-  // Hide navbar on specific routes
-  const hideNavbarRoutes = ['/login', '/signup'];
+  const hideNavbarRoutes = ["/login", "/signup"];
   const hideNavbar = hideNavbarRoutes.includes(location.pathname);
 
-  // Fetch menu items from backend
   useEffect(() => {
     fetchMenu()
-      .then((data) => {
-        setMenu(data);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch menu:", err);
-      });
+      .then((data) => setMenu(data))
+      .catch((err) => console.error("Failed to fetch menu:", err));
   }, []);
 
-  // Show loading screen if auth is initializing
   if (loading) {
     return (
       <div className="loading-container">
-        <div className="spinner"></div>
-        <p>Ruko Jaraaaa...</p>
+        <div className="fry-animation">
+          <div className="fry-box">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="fry"
+                style={{ animationDelay: `${i * 0.2}s` }}
+              ></div>
+            ))}
+          </div>
+        </div>
+
+       
+        <img
+          src={mcdgif}
+          alt="McDonald's Fries"
+          className="mcd-fries-gif"
+        />
+
+        <p className="loading-text">Cooking Your Meal...</p>
       </div>
     );
   }
 
   return (
     <>
-      {!hideNavbar && <Nav />}
+      <ScrollToTop />
 
-      {/* Displaying menu outside of Routes (for debug/demo purpose) */}
-      <div>
-        {menu.map((item) => (
-          <p key={item._id}>{item.name}</p>
-        ))}
-      </div>
+      {!hideNavbar && <Nav />}
 
       <Routes>
         {/* Public Routes */}
@@ -68,8 +87,7 @@ function App() {
           <Route path="/orders" element={<Orders />} />
         </Route>
 
-        {/* 404 Fallback */}
-        <Route path="*" element={<h1>Oops! Something went wrong.</h1>} />
+        <Route path="*" element={<h1>Oops! Page Not Found</h1>} />
       </Routes>
     </>
   );
