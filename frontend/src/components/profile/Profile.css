@@ -1,10 +1,12 @@
 .profile-container {
   max-width: 1000px;
-  margin: 3rem auto;
+  margin: 6rem auto 3rem; /* Add more top margin to account for fixed navbar */
   padding: 2.5rem;
   background-color: #fff;
   border-radius: 15px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .profile-container.loading {
@@ -236,8 +238,9 @@
 /* Responsive styles */
 @media (max-width: 768px) {
   .profile-container {
-    padding: 2rem;
-    margin: 1.5rem;
+    padding: 1.5rem;
+    margin: 5rem 1.5rem 1.5rem; /* Adjust top margin for mobile */
+    width: auto;
   }
   
   .profile-header h1 {
@@ -263,7 +266,7 @@
 @media (max-width: 480px) {
   .profile-container {
     padding: 1.5rem;
-    margin: 1rem;
+    margin: 4rem 1rem 1rem; /* Adjust top margin for small screens */
     border-radius: 10px;
   }
   
