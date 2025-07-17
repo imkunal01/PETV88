@@ -11,7 +11,7 @@ import Orders from './components/orders/Orders';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import { useAuth } from './context/AuthContext';
 import { useEffect, useState } from 'react';
-import { fetchMenu } from './api';
+import { fetchMenu } from '../src/api.js';
 
 function App() {
   const { loading } = useAuth();
