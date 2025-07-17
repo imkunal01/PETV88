@@ -1,12 +1,22 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .profile-container {
   max-width: 1000px;
-  margin: 6rem auto 3rem; /* Add more top margin to account for fixed navbar */
+  width: 100%;
+  margin: 5rem auto 3rem;
   padding: 2.5rem;
   background-color: #fff;
   border-radius: 15px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  width: 100%;
   box-sizing: border-box;
+  min-height: calc(100vh - 8rem);
+  position: relative;
+  overflow: hidden;
 }
 
 .profile-container.loading {
@@ -79,6 +89,14 @@
   border-bottom: 2px solid #e0e0e0;
   margin-bottom: 2.5rem;
   gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
+.profile-tabs::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari */
 }
 
 .profile-tabs button {
@@ -239,8 +257,10 @@
 @media (max-width: 768px) {
   .profile-container {
     padding: 1.5rem;
-    margin: 5rem 1.5rem 1.5rem; /* Adjust top margin for mobile */
+    margin: 5rem 1.5rem 1.5rem;
     width: auto;
+    border-radius: 0;
+    min-height: calc(100vh - 6.5rem);
   }
   
   .profile-header h1 {
@@ -265,9 +285,9 @@
 
 @media (max-width: 480px) {
   .profile-container {
-    padding: 1.5rem;
-    margin: 4rem 1rem 1rem; /* Adjust top margin for small screens */
-    border-radius: 10px;
+    padding: 1.25rem;
+    margin: 4rem 0.75rem 1rem;
+    border-radius: 8px;
   }
   
   .profile-header h1 {

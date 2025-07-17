@@ -7,6 +7,11 @@
   scroll-behavior: smooth;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   position: relative;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.home-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .home-section {

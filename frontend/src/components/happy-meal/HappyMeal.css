@@ -1,20 +1,30 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .happy-meal-page {
-  padding-top: 120px; /* Prevent content from hiding behind fixed navbar */
-  padding-left: 20px;
-  padding-right: 20px;
-  background-color: #fff;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .happy-meal-hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-              url('../../assets/happy-meal-hero.jpg') center/cover no-repeat;
-  height: 400px;
+  width: 100%;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   text-align: center;
   margin-bottom: 3rem;
+  position: relative;
+  left: 0;
+  right: 0;
 }
 
 .hero-content {
@@ -41,9 +51,11 @@
 
 /* Central Layout Wrapper */
 .offers-wrapper {
+  width: 100%;
   max-width: 1200px;
+  padding: 0 20px 4rem;
   margin: 0 auto;
-  padding-bottom: 4rem;
+  box-sizing: border-box;
 }
 
 .offers-wrapper h2 {
@@ -65,8 +77,10 @@
 
 .offers-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 2rem;
+  width: 100%;
+  justify-items: center;
 }
 
 .offer-card {
@@ -76,6 +90,9 @@
   transition: transform 0.3s, box-shadow 0.3s;
   overflow: hidden;
   position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
 }
 
 .offer-card:hover {
@@ -204,12 +221,16 @@
 /* Promo Section */
 .promo-section {
   background-color: #f9f9f9;
-  padding: 4rem 1rem;
+  padding: 4rem 0;
+  margin-top: 2rem;
+  width: 100%;
 }
 
 .promo-content {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
 .promo-content h2 {
