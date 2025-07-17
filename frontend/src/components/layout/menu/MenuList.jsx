@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import MenuItem from './MenuItem';
 import './MenuList.css';
 
-const MenuList = ({ items }) => {
+const MenuList = ({ items, onAddToCart }) => {
   return (
     <motion.div 
       className="menu-items"
@@ -16,6 +16,7 @@ const MenuList = ({ items }) => {
           <MenuItem 
             key={item._id}
             item={item}
+            onAddToCart={onAddToCart}
           />
         ))
       ) : (

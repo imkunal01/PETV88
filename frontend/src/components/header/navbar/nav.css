@@ -82,6 +82,37 @@ body {
   gap: 1rem;
 }
 
+.cart-icon {
+  position: relative;
+  font-size: 1.2rem;
+  color: #FF5C00;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.cart-icon:hover {
+  background-color: rgba(255, 92, 0, 0.1);
+  transform: scale(1.1);
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: #e4002b;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .auth-links {
   display: flex;
   gap: 1rem;

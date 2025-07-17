@@ -212,16 +212,40 @@
   color: green;
 }
 
-/* View Details Button */
-.view-details {
-  background: #ffbc0d;
+/* Menu Buttons */
+.home-menu-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.view-details, .add-to-cart {
+  flex: 1;
   border: none;
   padding: 0.6rem 1.2rem;
   font-size: 1rem;
   font-weight: bold;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 1rem;
+  transition: all 0.3s ease;
+}
+
+.view-details {
+  background: #ffbc0d;
+  color: #333;
+}
+
+.view-details:hover {
+  background: #e6a800;
+}
+
+.add-to-cart {
+  background: #e60000;
+  color: white;
+}
+
+.add-to-cart:hover {
+  background: #cc0000;
 }
 
 /* Responsive */
@@ -262,5 +286,15 @@
 
   .ingredients-box p {
     max-width: 100%;
+  }
+  
+  .home-menu-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .view-details, .add-to-cart {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
   }
 }

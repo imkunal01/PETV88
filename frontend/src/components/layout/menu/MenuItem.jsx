@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import './MenuItem.css';
 
-const MenuItem = ({ item }) => {
+const MenuItem = ({ item, onAddToCart }) => {
   return (
     <motion.div 
       className="menu-item"
@@ -22,9 +22,10 @@ const MenuItem = ({ item }) => {
         <div className="item-footer">
           <span className="item-price">₹{item.price}</span>
           <button 
-            className="view-details-btn"
+            className="add-to-cart-btn"
+            onClick={() => onAddToCart(item)}
           >
-            View Details
+            Add to Cart
           </button>
         </div>
       </div>
@@ -33,3 +34,6 @@ const MenuItem = ({ item }) => {
 };
 
 export default MenuItem;
+
+
+

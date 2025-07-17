@@ -10,9 +10,13 @@ import Signup from "./components/auth/Signup";
 import HappyMeal from "./components/happy-meal/HappyMeal";
 import Profile from "./components/profile/Profile";
 import Orders from "./components/orders/Orders";
+import Checkout from "./components/checkout/Checkout";
+import Payment from "./components/payment/Payment";
+import OrderSuccess from "./components/order/OrderSuccess";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import mcdgif from "./assets/mcgif.gif";
 import { useAuth } from "./context/AuthContext";
+import { CartProvider } from "./context/CartContext";
 import { fetchMenu } from "./api";
 
 
@@ -71,9 +75,10 @@ function App() {
     <>
       <ScrollToTop />
 
-      {!hideNavbar && <Nav />}
+      <CartProvider>
+        {!hideNavbar && <Nav />}
 
-      <Routes>
+        <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -85,10 +90,14 @@ function App() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/orders" element={<Orders />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment/:orderId" element={<Payment />} />
+          <Route path="/order-success/:orderId" element={<OrderSuccess />} />
         </Route>
 
         <Route path="*" element={<h1>Oops! Page Not Found</h1>} />
-      </Routes>
+        </Routes>
+      </CartProvider>
     </>
   );
 }

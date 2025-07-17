@@ -106,6 +106,10 @@ const orderSchema = new mongoose.Schema({
     enum: ['Pending', 'Paid', 'Failed', 'Refunded'],
     default: 'Pending'
   },
+  paymentDetails: {
+    type: Object,
+    default: null
+  },
   address: { 
     type: String,
     default: ''

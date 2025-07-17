@@ -1,11 +1,16 @@
 import './nav.css';
 import logo from '../../../assets/mcdlogo.svg';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { useAuth } from '../../../context/AuthContext';
-import { FaUser } from 'react-icons/fa';
+import { useCart } from '../../../context/CartContext';
+import { FaUser, FaShoppingCart } from 'react-icons/fa';
+import Cart from '../../cart/Cart';
 
 function Nav() {
   const { isAuthenticated, user, logout } = useAuth();
+  const { itemCount } = useCart();
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -30,6 +35,11 @@ function Nav() {
         </div>
 
         <div className="nav-right">
+          <div className="cart-icon" onClick={() => setIsCartOpen(true)}>
+            <FaShoppingCart />
+            {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
+          </div>
+          
           {isAuthenticated ? (
             <div className="user-menu">
               <div className="user-info">
@@ -50,6 +60,8 @@ function Nav() {
           )}
         </div>
       </div>
+      
+      <Cart isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </div>
   );
 }

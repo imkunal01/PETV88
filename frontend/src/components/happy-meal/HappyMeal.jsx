@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaInfoCircle, FaClock, FaTag } from 'react-icons/fa';
+import { FaInfoCircle, FaClock, FaTag, FaCartPlus } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import { useCart } from '../../context/CartContext';
 import './HappyMeal.css';
 
 import happyMealImg1 from '../../assets/happy-meal-1.svg';
@@ -59,6 +60,7 @@ const happyMealOffers = [
 const HappyMeal = () => {
   const [timeLeft, setTimeLeft] = useState({});
   const [selectedToy, setSelectedToy] = useState({});
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -84,6 +86,16 @@ const HappyMeal = () => {
 
   const handleViewDetails = (offer) => {
     toast.success(`${offer.name} details viewed!`);
+  };
+  
+  const handleAddToCart = (offer) => {
+    addToCart({
+      _id: offer.id,
+      name: offer.name,
+      price: offer.price,
+      image: offer.image,
+      description: offer.description
+    });
   };
 
   const handleToySelection = (offerId, toy) => {
@@ -148,9 +160,14 @@ const HappyMeal = () => {
                     ))}
                   </div>
                 </div>
-                <button className="view-details-btn" onClick={() => handleViewDetails(offer)}>
-                  <FaInfoCircle /> View Details
-                </button>
+                <div className="offer-buttons">
+                  <button className="view-details-btn" onClick={() => handleViewDetails(offer)}>
+                    <FaInfoCircle /> View Details
+                  </button>
+                  <button className="add-to-cart-btn" onClick={() => handleAddToCart(offer)}>
+                    <FaCartPlus /> Add to Cart
+                  </button>
+                </div>
               </div>
             </motion.div>
           ))}

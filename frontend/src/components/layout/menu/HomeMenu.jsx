@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './HomeMenu.css';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
+import { useCart } from '../../../context/CartContext';
 import burger1 from '../../../assets/veg.png';
 import burger2 from '../../../assets/mcaloo-tikki.png';
 import burger3 from '../../../assets/mcchicken.png';
@@ -91,6 +92,7 @@ const HomeMenu = () => {
   const [index, setIndex] = useState(0);
   const [message, setMessage] = useState('');
   const meal = meals[index];
+  const { addToCart } = useCart();
 
   const nextMeal = () => setIndex((index + 1) % meals.length);
   const prevMeal = () => setIndex((index - 1 + meals.length) % meals.length);
@@ -99,6 +101,16 @@ const HomeMenu = () => {
     toast.success(`${meal.name} details viewed!`);
     setMessage(`${meal.name} details viewed! ✅`);
     setTimeout(() => setMessage(''), 3000);
+  };
+  
+  const handleAddToCart = () => {
+    addToCart({
+      _id: meal._id,
+      name: meal.name,
+      price: meal.price,
+      image: meal.image,
+      description: meal.description
+    });
   };
 
   useEffect(() => {
@@ -152,7 +164,10 @@ const HomeMenu = () => {
             ))}
           </div>
 
-          <button className="view-details" onClick={handleViewDetails}>View Details 🔍</button>
+          <div className="home-menu-buttons">
+            <button className="view-details" onClick={handleViewDetails}>View Details 🔍</button>
+            <button className="add-to-cart" onClick={handleAddToCart}>Add to Cart 🛒</button>
+          </div>
           {message && <p className="details-message">{message}</p>}
         </motion.div>
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import './menu.css';
 import { motion } from 'framer-motion';
-import toast from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
+import { useCart } from '../../../context/CartContext';
 import CategoryFilter from '../../layout/menu/CategoryFilter';
 import MenuList from '../../layout/menu/MenuList';
+import './menu.css';
 
 
 const menuItems = [
@@ -157,6 +158,7 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [filteredItems, setFilteredItems] = useState([]);
   const [isVegOnly, setIsVegOnly] = useState(false);
+  const { addToCart } = useCart();
   
 
   const categories = ['All', ...new Set(menuItems.map(item => item.category))];
@@ -176,7 +178,8 @@ const Menu = () => {
   }, [selectedCategory, isVegOnly]);
   
   const handleItemClick = (item) => {
-    toast.success(`${item.name} selected!`);
+    addToCart(item);
+    toast.success(`${item.name} added to cart!`);
   };
 
   return (

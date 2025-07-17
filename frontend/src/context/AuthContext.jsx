@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     const checkLoggedIn = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5001/api/auth/user', {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/user`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:5001/api/auth/register', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -79,7 +79,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -111,7 +111,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:5001/api/auth/logout', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -140,7 +140,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('http://localhost:5001/api/auth/update-profile', {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/update-profile`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
