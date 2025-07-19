@@ -9,10 +9,17 @@ const authenticateToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded || !decoded.id) {
+      return res.status(401).json({ message: 'Invalid token format' });
+    }
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(403).json({ message: 'Invalid or expired token' });
+    console.error('Token verification error:', error);
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Token has expired' });
+    }
+    return res.status(403).json({ message: 'Invalid token' });
   }
 };
 

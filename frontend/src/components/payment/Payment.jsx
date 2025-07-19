@@ -2,16 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import './Payment.css';
 
 const Payment = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { clearCart } = useCart();
+  const { isAuthenticated } = useAuth();
   
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Check authentication
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.error('Please login to continue with payment');
+      navigate('/login', { 
+        state: { 
+          from: `/payment/${orderId}`,
+          message: 'Please login to complete your payment' 
+        } 
+      });
+    }
+  }, [isAuthenticated, orderId, navigate]);
   
   // Fetch order details
   useEffect(() => {
@@ -48,7 +64,23 @@ const Payment = () => {
   
   // Initialize Razorpay payment
   const initializeRazorpay = async () => {
+    if (!isAuthenticated) {
+      toast.error('Please login to continue with payment');
+      navigate('/login', { 
+        state: { 
+          from: `/payment/${orderId}`,
+          message: 'Please login to complete your payment' 
+        } 
+      });
+      return;
+    }
+
+    if (isProcessing) {
+      return;
+    }
+
     try {
+      setIsProcessing(true);
       // Fetch Razorpay key from backend
       const keyResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payments/key`, {
         method: 'GET',
@@ -56,6 +88,16 @@ const Payment = () => {
       });
       
       if (!keyResponse.ok) {
+        if (keyResponse.status === 401) {
+          toast.error('Your session has expired. Please login again.');
+          navigate('/login', { 
+            state: { 
+              from: `/payment/${orderId}`,
+              message: 'Your session has expired. Please login again.' 
+            } 
+          });
+          return;
+        }
         throw new Error('Failed to fetch Razorpay key');
       }
       
@@ -87,6 +129,8 @@ const Payment = () => {
     } catch (err) {
       console.error('Payment initialization error:', err);
       toast.error(err.message);
+    } finally {
+      setIsProcessing(false);
     }
   };
   
@@ -198,8 +242,9 @@ const Payment = () => {
         <button 
           className="pay-now-btn"
           onClick={initializeRazorpay}
+          disabled={isProcessing}
         >
-          Pay Now
+          {isProcessing ? 'Processing...' : 'Pay Now'}
         </button>
         
         <button 

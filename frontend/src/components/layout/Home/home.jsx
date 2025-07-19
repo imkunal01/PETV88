@@ -270,10 +270,8 @@ const Home = () => {
                   <p>Email: info@mcdonaldsindia.com</p>
                 </div>
               </div>
-              <div className="map-placeholder">
-                <div className="map-box">
-                  <p>Google Maps Integration</p>
-                </div>
+              <div className="contact-image">
+                <img src="/images/store-front.jpg" alt="McDonald's Store Front" className="store-image" />
               </div>
             </div>
           </div>
