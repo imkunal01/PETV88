@@ -14,8 +14,6 @@ import Checkout from "./components/checkout/Checkout";
 import Payment from "./components/payment/Payment";
 import OrderSuccess from "./components/order/OrderSuccess";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
-import NotFound from "./components/pages/NotFound";
-import ErrorBoundary from "./components/error/ErrorBoundary";
 import mcdgif from "./assets/mcgif.gif";
 import { useAuth } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
@@ -74,34 +72,34 @@ function App() {
   // }
 
   return (
-    <ErrorBoundary>
+    <>
       <ScrollToTop />
 
       <CartProvider>
         {!hideNavbar && <Nav />}
 
         <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/happy-meal" element={<HappyMeal />} />
-          <Route path="/about" element={<About />} />
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/happy-meal" element={<HappyMeal />} />
+        <Route path="/about" element={<About />} />
           <Route path="/menu" element={<Menu />} />
 
-          {/* Protected Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/payment/:orderId" element={<Payment />} />
-            <Route path="/order-success/:orderId" element={<OrderSuccess />} />
-          </Route>
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment/:orderId" element={<Payment />} />
+          <Route path="/order-success/:orderId" element={<OrderSuccess />} />
+        </Route>
 
-          <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<h1>Oops! Page Not Found</h1>} />
         </Routes>
       </CartProvider>
-    </ErrorBoundary>
+    </>
   );
 }
 

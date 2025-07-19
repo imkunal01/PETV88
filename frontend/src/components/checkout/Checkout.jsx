@@ -16,48 +16,22 @@ const Checkout = () => {
   const [address, setAddress] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  // Handle authentication and cart state
+  // Redirect to login if not authenticated
   React.useEffect(() => {
-    const checkAuthAndCart = () => {
-      if (!isAuthenticated) {
-        toast.error('Please login to continue with checkout');
-        navigate('/login', { 
-          state: { 
-            from: '/checkout',
-            message: 'Please login to continue with your order' 
-          } 
-        });
-        return;
-      }
-      
-      if (cartItems.length === 0) {
-        toast.error('Your cart is empty');
-        navigate('/menu');
-      }
-    };
-
-    checkAuthAndCart();
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: '/checkout' } });
+    }
+    
+    // Redirect to menu if cart is empty
+    if (cartItems.length === 0) {
+      toast.error('Your cart is empty');
+      navigate('/menu');
+    }
   }, [isAuthenticated, cartItems, navigate]);
   
   const handlePlaceOrder = async () => {
-    if (!isAuthenticated) {
-      toast.error('Please login to place your order');
-      navigate('/login', { 
-        state: { 
-          from: '/checkout',
-          message: 'Please login to continue with your order' 
-        } 
-      });
-      return;
-    }
-
     if (cartItems.length === 0) {
       toast.error('Your cart is empty');
-      return;
-    }
-    
-    if (orderType === 'Takeaway' && !address.trim()) {
-      toast.error('Please provide a delivery address');
       return;
     }
     
@@ -68,14 +42,13 @@ const Checkout = () => {
       const orderData = {
         orderType,
         paymentMethod,
-        address: orderType === 'Takeaway' ? address.trim() : '',
+        address: orderType === 'Takeaway' ? address : '',
         items: cartItems.map(item => ({
           menuItemId: item._id,
           quantity: item.quantity,
           options: [],
           specialInstructions: ''
-        })),
-        totalAmount: cartTotal + (cartTotal * 0.18) + (orderType === 'Takeaway' ? 40 : 0)
+        }))
       };
       
       // Make API call to create order
@@ -91,16 +64,6 @@ const Checkout = () => {
       const data = await response.json();
       
       if (!response.ok) {
-        if (response.status === 401) {
-          toast.error('Please login again to continue');
-          navigate('/login', { 
-            state: { 
-              from: '/checkout',
-              message: 'Your session has expired. Please login again.' 
-            } 
-          });
-          return;
-        }
         throw new Error(data.message || 'Failed to place order');
       }
       

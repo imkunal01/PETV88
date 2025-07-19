@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { hasCookie, removeCookie } from '../utils/cookieUtils';
 
 const AuthContext = createContext();
 
@@ -16,12 +15,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkLoggedIn = async () => {
       try {
-        if (!hasCookie('jwt')) {
-          setUser(null);
-          setLoading(false);
-          return;
-        }
-
         setLoading(true);
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/user`, {
           method: 'GET',
@@ -31,38 +24,21 @@ export const AuthProvider = ({ children }) => {
           }
         });
 
-        const data = await response.json();
-
         if (response.ok) {
-          setUser(data.user);
+          const userData = await response.json();
+          setUser(userData);
         } else {
-          if (response.status === 401) {
-            // Token expired or invalid
-            setUser(null);
-            // Clear any stored auth state
-            removeCookie('jwt');
-          }
-          throw new Error(data.message || 'Authentication failed');
+          setUser(null);
         }
       } catch (err) {
         console.error('Auth check error:', err);
         setUser(null);
-        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
     checkLoggedIn();
-
-    // Set up an interval to periodically check auth status only if JWT cookie exists
-    const authCheckInterval = setInterval(() => {
-      if (hasCookie('jwt')) {
-        checkLoggedIn();
-      }
-    }, 5 * 60 * 1000); // Check every 5 minutes
-
-    return () => clearInterval(authCheckInterval);
   }, []);
 
   // Register user
