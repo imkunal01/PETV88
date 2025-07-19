@@ -1,0 +1,66 @@
+/* File: About.css */
+.about-wrapper {
+  font-family: 'Segoe UI', sans-serif;
+  color: #222;
+  background-color: #fffdf8;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+section {
+  margin-bottom: 3rem;
+  padding: 1rem 2rem;
+  border-left: 4px solid #ffc107;
+  background-color: #fffaf0;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.hero {
+  text-align: center;
+  background: url('/assets/mcbanner.mp4') no-repeat center center/cover;
+  color: white;
+  padding: 4rem 2rem;
+  border: none;
+  background-color: #111;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+}
+
+.hero p {
+  font-size: 1.2rem;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+}
+
+h2 {
+  color: #d32f2f;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  font-size: 1.05rem;
+  margin: 0.8rem 0;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+ul li {
+  font-size: 1.1rem;
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: center;
+}
+
+ul li::before {
+  content: "🍟";
+  margin-right: 10px;
+  font-size: 1.2rem;
+}

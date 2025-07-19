@@ -18,7 +18,7 @@ import mcdgif from "./assets/mcgif.gif";
 import { useAuth } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { fetchMenu } from "./api";
-
+import About from "./components/pages/about/about.jsx";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -84,10 +84,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/happy-meal" element={<HappyMeal />} />
+        <Route path="/about" element={<About />} />
+          <Route path="/menu" element={<Menu />} />
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/menu" element={<Menu />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/checkout" element={<Checkout />} />
