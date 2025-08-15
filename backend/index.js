@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173', 'http://127.0.0.1:3000'], // Frontend URLs
+  origin: '*', // Frontend URLs
   credentials: true
 }));
 app.use(cookieParser());
