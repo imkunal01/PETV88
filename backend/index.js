@@ -22,8 +22,24 @@ app.get('/', (req, res) => {
 
 // Middleware
 app.use(express.json());
+
+  const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:3000',
+  'https://petv-88-g8qr.vercel.app', // ✅ your deployed frontend
+];
+
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173', 'http://127.0.0.1:3000'], // Frontend URLs
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow non-browser tools
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS blocked for origin: ${origin}`), false);
+  },
   credentials: true
 }));
 app.use(cookieParser());
