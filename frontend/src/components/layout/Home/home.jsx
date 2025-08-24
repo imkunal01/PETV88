@@ -6,7 +6,7 @@ import "./home.css";
 import mealImage from "../../../assets/ranveer.png";
 import mealvid from "../../../assets/happymeal.mp4";
 import HomeMenu from "../menu/HomeMenu";
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 const Home = () => {
   // Refs for scroll sections
@@ -272,7 +272,9 @@ const Home = () => {
                 </div>
               </div>
               <div className="map-placeholder">
-                <LoadScript googleMapsApiKey= {process.env.googleMapsApiKey}>
+                <LoadScript
+                  googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+                >
                   <GoogleMap
                     mapContainerStyle={mapContainerStyle}
                     center={center}
@@ -299,18 +301,18 @@ const Home = () => {
 export default Home;
 
 const mapContainerStyle = {
-  width: '100%',
-  height: '400px',
-  borderRadius: '12px'
+  width: "100%",
+  height: "400px",
+  borderRadius: "12px",
 };
 
 const center = {
-  lat: 28.6139,  // Delhi coordinates
-  lng: 77.2090
+  lat: 28.6139, // Delhi coordinates
+  lng: 77.209,
 };
 
 const locations = [
-  { lat: 28.6139, lng: 77.2090, name: "McDonald's CP" },
+  { lat: 28.6139, lng: 77.209, name: "McDonald's CP" },
   { lat: 28.6292, lng: 77.2195, name: "McDonald's Mandi House" },
   { lat: 28.6304, lng: 77.2177, name: "McDonald's ITO" },
 ];
