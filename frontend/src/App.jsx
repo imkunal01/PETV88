@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import Nav from "./components/header/navbar/nav.jsx";
@@ -17,7 +17,6 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import mcdgif from "./assets/mcgif.gif";
 import { useAuth } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
-import { fetchMenu } from "./api";
 import About from "./components/pages/about/about.jsx";
 
 const pageVariants = {
@@ -45,16 +44,9 @@ function ScrollToTop() {
 function App() {
   const { loading } = useAuth();
   const location = useLocation();
-  const [menu, setMenu] = useState([]);
 
   const hideNavbarRoutes = ["/login", "/signup"];
   const hideNavbar = hideNavbarRoutes.includes(location.pathname);
-
-  useEffect(() => {
-    fetchMenu()
-      .then((data) => setMenu(data))
-      .catch((err) => console.error("Failed to fetch menu:", err));
-  }, []);
 
   if (loading) {
     return (

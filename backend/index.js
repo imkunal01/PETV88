@@ -4,9 +4,6 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
-// Import scheduled tasks
-const { initScheduledTasks } = require('./utils/scheduledTasks');
-
 // Import routes
 const authRoutes = require('./routes/auth');
 const menuRoutes = require('./routes/menu');
@@ -77,7 +74,4 @@ app.use((err, req, res, next) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  
-  // Initialize scheduled tasks
-  initScheduledTasks();
 });

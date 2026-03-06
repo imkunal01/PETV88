@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import "./home.css";
-import mealImage from "../../../assets/ranveer.png";
 import mealvid from "../../../assets/happymeal.mp4";
 import HomeMenu from "../menu/HomeMenu";
 
