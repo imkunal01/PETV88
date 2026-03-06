@@ -5,6 +5,13 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { authenticateToken } = require('../middleware/auth');
 
+const getCookieOptions = () => ({
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  maxAge: 24 * 60 * 60 * 1000
+});
+
 // Register User
 router.post('/register', async (req, res) => {
   try {
@@ -31,14 +38,12 @@ router.post('/register', async (req, res) => {
 
     // Create and send JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000 // 1 day
-    });
+
+    res.cookie('jwt', token, getCookieOptions());
 
     res.status(201).json({
       message: 'User registered successfully',
+      token,
       user: { id: user._id, name: user.name, email: user.email }
     });
   } catch (error) {
@@ -66,14 +71,12 @@ router.post('/login', async (req, res) => {
 
     // Create and send JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-    
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000 // 1 day
-    });
+
+    res.cookie('jwt', token, getCookieOptions());
 
     res.status(200).json({
       message: 'Login successful',
+      token,
       user: { id: user._id, name: user.name, email: user.email }
     });
   } catch (error) {
@@ -84,7 +87,10 @@ router.post('/login', async (req, res) => {
 
 // Logout User
 router.post('/logout', (req, res) => {
-  res.cookie('jwt', '', { maxAge: 1 });
+  res.cookie('jwt', '', {
+    ...getCookieOptions(),
+    maxAge: 1
+  });
   res.status(200).json({ message: 'Logged out successfully' });
 });
 
@@ -106,18 +112,18 @@ router.get('/user', authenticateToken, async (req, res) => {
 router.put('/update-profile', authenticateToken, async (req, res) => {
   try {
     const { name, phone, address, currentPassword, newPassword } = req.body;
-    
+
     // Find user
     const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
+
     // Update basic info
     if (name) user.name = name;
     if (phone) user.phone = phone;
     if (address) user.address = address;
-    
+
     // Update password if provided
     if (currentPassword && newPassword) {
       // Verify current password
@@ -125,18 +131,18 @@ router.put('/update-profile', authenticateToken, async (req, res) => {
       if (!isPasswordValid) {
         return res.status(400).json({ message: 'Current password is incorrect' });
       }
-      
+
       // Hash new password
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(newPassword, salt);
       user.passwordUpdatedAt = Date.now();
     }
-    
+
     await user.save();
-    
+
     // Return updated user without password
     const updatedUser = await User.findById(req.user.id).select('-password');
-    
+
     res.status(200).json({
       message: 'Profile updated successfully',
       user: updatedUser

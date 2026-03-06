@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import './Profile.css';
 
 const Profile = () => {
   const { user, updateUser, loading } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,6 +19,8 @@ const Profile = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -31,6 +35,39 @@ const Profile = () => {
       });
     }
   }, [user]);
+
+  // Fetch recent orders
+  useEffect(() => {
+    if (user && activeTab === 'orders') {
+      fetchRecentOrders();
+    }
+  }, [user, activeTab]);
+
+  const fetchRecentOrders = async () => {
+    try {
+      setOrdersLoading(true);
+      const token = localStorage.getItem('token');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001'}/api/orders?limit=5`, {
+        method: 'GET',
+        credentials: 'include',
+        headers
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch orders');
+      }
+      
+      const data = await response.json();
+      setOrders(data.orders || []);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    } finally {
+      setOrdersLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -94,6 +131,35 @@ const Profile = () => {
     }
   };
 
+  const formatDate = (dateString) => {
+    const options = { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  const getStatusClass = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'completed':
+      case 'delivered':
+        return 'status-completed';
+      case 'processing':
+        return 'status-processing';
+      case 'preparing':
+        return 'status-preparing';
+      case 'ready':
+        return 'status-ready';
+      case 'cancelled':
+        return 'status-cancelled';
+      default:
+        return 'status-default';
+    }
+  };
+
   if (loading) {
     return (
       <div className="profile-container loading">
@@ -126,6 +192,12 @@ const Profile = () => {
           onClick={() => setActiveTab('profile')}
         >
           Personal Info
+        </button>
+        <button 
+          className={activeTab === 'orders' ? 'active' : ''}
+          onClick={() => setActiveTab('orders')}
+        >
+          My Orders
         </button>
         <button 
           className={activeTab === 'security' ? 'active' : ''}
@@ -205,6 +277,90 @@ const Profile = () => {
                 </button>
               )}
             </form>
+          </div>
+        )}
+        
+        {activeTab === 'orders' && (
+          <div className="orders-info">
+            <div className="info-header">
+              <h3>Recent Orders</h3>
+              <button 
+                className="view-all-button"
+                onClick={() => navigate('/orders')}
+              >
+                View All Orders
+              </button>
+            </div>
+            
+            {ordersLoading ? (
+              <div className="loading-orders">
+                <div className="spinner"></div>
+                <p>Loading orders...</p>
+              </div>
+            ) : orders.length === 0 ? (
+              <div className="no-orders-profile">
+                <div className="no-orders-icon">📦</div>
+                <p>No orders yet</p>
+                <button 
+                  className="browse-menu-button"
+                  onClick={() => navigate('/menu')}
+                >
+                  Browse Menu
+                </button>
+              </div>
+            ) : (
+              <div className="orders-list-profile">
+                {orders.map((order) => (
+                  <motion.div 
+                    key={order._id}
+                    className="order-card-profile"
+                    whileHover={{ scale: 1.02 }}
+                    onClick={() => navigate(`/orders`)}
+                  >
+                    <div className="order-card-header">
+                      <div className="order-number-profile">
+                        <span className="label">Order #</span>
+                        <strong>{order.orderNumber}</strong>
+                      </div>
+                      <div className={`order-status-badge ${getStatusClass(order.status)}`}>
+                        {order.status}
+                      </div>
+                    </div>
+                    
+                    <div className="order-card-body">
+                      <div className="order-meta">
+                        <div className="meta-item">
+                          <span className="meta-label">Date:</span>
+                          <span className="meta-value">{formatDate(order.createdAt)}</span>
+                        </div>
+                        <div className="meta-item">
+                          <span className="meta-label">Type:</span>
+                          <span className="meta-value">{order.orderType}</span>
+                        </div>
+                        <div className="meta-item">
+                          <span className="meta-label">Total:</span>
+                          <span className="meta-value">₹{order.total?.toFixed(2)}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="order-items-preview">
+                        <span className="items-count">{order.items?.length} item(s)</span>
+                        <div className="items-list">
+                          {order.items?.slice(0, 2).map((item, index) => (
+                            <span key={index} className="item-preview">
+                              {item.quantity}x {item.name}
+                            </span>
+                          ))}
+                          {order.items?.length > 2 && (
+                            <span className="more-items">+{order.items.length - 2} more</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </div>
         )}
         

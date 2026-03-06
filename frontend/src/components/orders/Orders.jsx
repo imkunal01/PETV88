@@ -1,345 +1,220 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import {
+  FaReceipt, FaTimes, FaRedo, FaChevronRight,
+  FaUtensils, FaTruck, FaClock, FaMoneyBillWave,
+} from 'react-icons/fa';
 import './Orders.css';
+
+const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+const STATUS_MAP = {
+  pending:    { bg: '#FFF8E1', color: '#F57F17', label: 'Pending' },
+  confirmed:  { bg: '#E3F2FD', color: '#1565C0', label: 'Confirmed' },
+  preparing:  { bg: '#E3F2FD', color: '#1565C0', label: 'Preparing' },
+  processing: { bg: '#E3F2FD', color: '#1565C0', label: 'Processing' },
+  ready:      { bg: '#E8F5E9', color: '#2E7D32', label: 'Ready' },
+  completed:  { bg: '#E8F5E9', color: '#2E7D32', label: 'Completed' },
+  delivered:  { bg: '#E0F7FA', color: '#00838F', label: 'Delivered' },
+  cancelled:  { bg: '#FFEBEE', color: '#C62828', label: 'Cancelled' },
+};
+
+const statusStyle = (s) => {
+  const m = STATUS_MAP[s?.toLowerCase()] || { bg: '#f0f0f0', color: '#555', label: s };
+  return { background: m.bg, color: m.color, label: m.label };
+};
+
+const formatDate = (d) =>
+  new Date(d).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
 const Orders = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [reordering, setReordering] = useState(false);
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/orders', {
-        withCredentials: true
+      const { data } = await axios.get(`${API_BASE}/api/orders`, {
+        withCredentials: true,
+        headers: getAuthHeaders(),
       });
-      setOrders(response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-    } catch (error) {
-      console.error('Error fetching orders:', error);
+      const list = data?.orders || [];
+      setOrders(list.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+    } catch {
       toast.error('Failed to load orders');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  useEffect(() => {
-    if (user) {
-      fetchOrders();
-    }
-  }, [user]);
-
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
-  const getStatusClass = (status) => {
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return 'status-completed';
-      case 'processing':
-        return 'status-processing';
-      case 'delivered':
-        return 'status-delivered';
-      case 'cancelled':
-        return 'status-cancelled';
-      default:
-        return '';
-    }
-  };
-
-  const handleOrderClick = (order) => {
-    setSelectedOrder(order);
-  };
-
-  const closeOrderDetails = () => {
-    setSelectedOrder(null);
-  };
-
-  const openHelpModal = () => {
-    setShowHelpModal(true);
-  };
-
-  const closeHelpModal = () => {
-    setShowHelpModal(false);
-  };
+  useEffect(() => { if (user) fetchOrders(); }, [user, fetchOrders]);
 
   const handleReorder = async (order) => {
     try {
-      setLoading(true);
-      
-      // Create a new order with the same items and details
-      const response = await axios.post('/api/orders/reorder', 
+      setReordering(true);
+      const { data } = await axios.post(
+        `${API_BASE}/api/orders/reorder`,
         { orderId: order._id },
-        { withCredentials: true }
+        { withCredentials: true, headers: getAuthHeaders() },
       );
-      
-      toast.success('Order placed successfully!');
-      
-      // Refresh orders list
-      fetchOrders();
-      
-      // Close modal
-      closeOrderDetails();
-    } catch (error) {
-      console.error('Error reordering:', error);
-      toast.error('Failed to place order. Please try again.');
+      toast.success('Order placed!');
+      navigate(`/order-success/${data.order._id}`);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Reorder failed');
     } finally {
-      setLoading(false);
+      setReordering(false);
     }
   };
 
+  /* ── Loading ── */
   if (loading) {
     return (
-      <div className="orders-container loading">
-        <div className="spinner"></div>
-        <p>Loading orders...</p>
+      <div className="mo-page mo-loading">
+        <div className="mo-spinner" />
+        <p>Loading orders…</p>
       </div>
     );
   }
 
+  /* ── Main ── */
   return (
-    <motion.div 
-      className="orders-container"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="orders-header">
+    <motion.div className="mo-page" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <div className="mo-header">
+        <FaReceipt className="mo-header-icon" />
         <h1>My Orders</h1>
-        <p>View and track your orders</p>
+        <p>Track and manage your orders</p>
       </div>
 
       {orders.length === 0 ? (
-        <div className="no-orders">
-          <div className="no-orders-icon">📦</div>
+        <div className="mo-empty">
+          <span className="mo-empty-icon">🍔</span>
           <h3>No orders yet</h3>
-          <p>You haven't placed any orders yet. Start ordering your favorite meals!</p>
+          <p>Your order history will appear here once you place your first order.</p>
+          <button className="mo-btn primary" onClick={() => navigate('/menu')}>Browse Menu</button>
         </div>
       ) : (
-        <div className="orders-list">
-          {orders.map((order) => (
-            <motion.div 
-              key={order._id} 
-              className="order-card"
-              whileHover={{ scale: 1.02 }}
-              onClick={() => handleOrderClick(order)}
-            >
-              <div className="order-header">
-                <div className="order-number">
-                  <span>Order #</span>
-                  <strong>{order.orderNumber}</strong>
+        <div className="mo-grid">
+          {orders.map((order) => {
+            const st = statusStyle(order.status);
+            return (
+              <motion.div
+                key={order._id}
+                className="mo-card"
+                whileHover={{ y: -4 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+                onClick={() => setSelected(order)}
+              >
+                <div className="mo-card-top">
+                  <div>
+                    <span className="mo-label">Order</span>
+                    <strong className="mo-order-num">#{order.orderNumber}</strong>
+                  </div>
+                  <span className="mo-badge" style={{ background: st.bg, color: st.color }}>{st.label}</span>
                 </div>
-                <div className={`order-status ${getStatusClass(order.status)}`}>
-                  {order.status}
+
+                <div className="mo-card-meta">
+                  <div><FaClock /> {formatDate(order.createdAt)}</div>
+                  <div>{order.orderType === 'Takeaway' ? <FaTruck /> : <FaUtensils />} {order.orderType}</div>
+                  <div><FaMoneyBillWave /> {order.paymentMethod}</div>
                 </div>
-              </div>
-              
-              <div className="order-info">
-                <div className="order-date">
-                  <span>Ordered on:</span>
-                  <p>{formatDate(order.createdAt)}</p>
-                </div>
-                
-                <div className="order-type">
-                  <span>Type:</span>
-                  <p>{order.orderType}</p>
-                </div>
-                
-                <div className="order-payment">
-                  <span>Payment:</span>
-                  <p>{order.paymentMethod}</p>
-                </div>
-                
-                <div className="order-total">
-                  <span>Total:</span>
-                  <p>${order.total.toFixed(2)}</p>
-                </div>
-              </div>
-              
-              <div className="order-items-preview">
-                <span>{order.items.length} item(s)</span>
-                <p>
-                  {order.items.slice(0, 2).map((item, index) => (
-                    <span key={index}>
-                      {item.quantity}x {item.name}
-                      {index < Math.min(order.items.length, 2) - 1 ? ', ' : ''}
-                    </span>
+
+                <div className="mo-card-items">
+                  {order.items.slice(0, 2).map((it, i) => (
+                    <span key={i}>{it.quantity}x {it.name}</span>
                   ))}
-                  {order.items.length > 2 && <span> and {order.items.length - 2} more...</span>}
-                </p>
-              </div>
-              
-              <button className="view-details-btn">View Details</button>
-            </motion.div>
-          ))}
+                  {order.items.length > 2 && <span className="mo-more">+{order.items.length - 2} more</span>}
+                </div>
+
+                <div className="mo-card-foot">
+                  <strong className="mo-total">₹{order.total.toFixed(2)}</strong>
+                  <span className="mo-view">Details <FaChevronRight /></span>
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       )}
 
-      {selectedOrder && (
-        <div className="order-details-overlay">
-          <motion.div 
-            className="order-details-modal"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
+      {/* ── Detail Modal ── */}
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            className="mo-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelected(null)}
           >
-            <button className="close-modal" onClick={closeOrderDetails}>
-              &times;
-            </button>
-            
-            <div className="order-details-header">
-              <h2>Order Details</h2>
-              <div className={`order-status ${getStatusClass(selectedOrder.status)}`}>
-                {selectedOrder.status}
-              </div>
-            </div>
-            
-            <div className="order-details-info">
-              <div className="detail-group">
-                <span>Order Number:</span>
-                <p>{selectedOrder.orderNumber}</p>
-              </div>
-              
-              <div className="detail-group">
-                <span>Date:</span>
-                <p>{formatDate(selectedOrder.createdAt)}</p>
-              </div>
-              
-              <div className="detail-group">
-                <span>Order Type:</span>
-                <p>{selectedOrder.orderType}</p>
-              </div>
-              
-              <div className="detail-group">
-                <span>Payment Method:</span>
-                <p>{selectedOrder.paymentMethod}</p>
-              </div>
-              
-              {selectedOrder.address && (
-                <div className="detail-group">
-                  <span>Delivery Address:</span>
-                  <p>{selectedOrder.address}</p>
+            <motion.div
+              className="mo-modal"
+              initial={{ y: 80, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 60, opacity: 0 }}
+              transition={{ type: 'spring', damping: 24 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="mo-close" onClick={() => setSelected(null)}><FaTimes /></button>
+
+              <div className="mo-modal-head">
+                <div>
+                  <h2>Order #{selected.orderNumber}</h2>
+                  <span className="mo-modal-date">{formatDate(selected.createdAt)}</span>
                 </div>
-              )}
-            </div>
-            
-            <div className="order-items-list">
-              <h3>Items</h3>
-              <div className="items-table">
-                <div className="items-header">
-                  <div className="item-name">Item</div>
-                  <div className="item-price">Price</div>
-                  <div className="item-quantity">Qty</div>
-                  <div className="item-total">Total</div>
-                </div>
-                
-                {selectedOrder.items.map((item, index) => (
-                  <div className="item-row" key={index}>
-                    <div className="item-name">
-                      <p>{item.name}</p>
-                      {item.options && item.options.length > 0 && (
-                        <small>
-                          {item.options.map((option, i) => (
-                            <span key={i}>{option}{i < item.options.length - 1 ? ', ' : ''}</span>
-                          ))}
-                        </small>
-                      )}
+                {(() => { const st = statusStyle(selected.status); return (
+                  <span className="mo-badge lg" style={{ background: st.bg, color: st.color }}>{st.label}</span>
+                ); })()}
+              </div>
+
+              <div className="mo-modal-info">
+                <div><span>Type</span><strong>{selected.orderType}</strong></div>
+                <div><span>Payment</span><strong>{selected.paymentMethod}</strong></div>
+                {selected.address && <div className="mo-full"><span>Address</span><strong>{selected.address}</strong></div>}
+              </div>
+
+              <div className="mo-modal-items">
+                <h3>Items</h3>
+                {selected.items.map((item, i) => (
+                  <div key={i} className="mo-item-row">
+                    <div className="mo-item-info">
+                      <span className="mo-item-name">{item.name}</span>
+                      {item.options?.length > 0 && <small>{item.options.join(', ')}</small>}
                     </div>
-                    <div className="item-price">${item.price.toFixed(2)}</div>
-                    <div className="item-quantity">{item.quantity}</div>
-                    <div className="item-total">${(item.price * item.quantity).toFixed(2)}</div>
+                    <span className="mo-item-qty">x{item.quantity}</span>
+                    <span className="mo-item-price">₹{(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
-            </div>
-            
-            <div className="order-summary">
-              <div className="summary-row">
-                <span>Subtotal:</span>
-                <p>${selectedOrder.subtotal.toFixed(2)}</p>
-              </div>
-              
-              {selectedOrder.deliveryFee > 0 && (
-                <div className="summary-row">
-                  <span>Delivery Fee:</span>
-                  <p>${selectedOrder.deliveryFee.toFixed(2)}</p>
-                </div>
-              )}
-              
-              <div className="summary-row">
-                <span>Tax:</span>
-                <p>${selectedOrder.tax.toFixed(2)}</p>
-              </div>
-              
-              <div className="summary-row total">
-                <span>Total:</span>
-                <p>${selectedOrder.total.toFixed(2)}</p>
-              </div>
-            </div>
-            
-            <div className="order-actions">
-              <button 
-                className="reorder-btn" 
-                onClick={() => handleReorder(selectedOrder)}
-                disabled={loading}
-              >
-                {loading ? 'Processing...' : 'Reorder'}
-              </button>
-              <button className="help-btn" onClick={openHelpModal}>Need Help?</button>
-            </div>
-          </motion.div>
-        </div>
-      )}
 
-      {showHelpModal && (
-        <div className="order-details-overlay">
-          <motion.div 
-            className="help-modal"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
-          >
-            <button className="close-modal" onClick={closeHelpModal}>
-              &times;
-            </button>
-            
-            <div className="help-modal-header">
-              <h2>Need Help?</h2>
-            </div>
-            
-            <div className="help-modal-content">
-              <p>If you have any questions or issues with your order, please contact our customer support:</p>
-              
-              <div className="contact-info">
-                <div className="contact-item">
-                  <span>Phone:</span>
-                  <p>+91 1800-123-4567</p>
-                </div>
-                
-                <div className="contact-item">
-                  <span>Email:</span>
-                  <p>support@mcdonaldsclone.com</p>
-                </div>
-                
-                <div className="contact-item">
-                  <span>Hours:</span>
-                  <p>24/7 Customer Support</p>
-                </div>
+              <div className="mo-modal-totals">
+                <div><span>Subtotal</span><span>₹{selected.subtotal.toFixed(2)}</span></div>
+                <div><span>Tax</span><span>₹{selected.tax.toFixed(2)}</span></div>
+                {selected.deliveryFee > 0 && <div><span>Delivery</span><span>₹{selected.deliveryFee.toFixed(2)}</span></div>}
+                {selected.discount > 0 && <div className="mo-discount"><span>Discount</span><span>-₹{selected.discount.toFixed(2)}</span></div>}
+                <div className="mo-grand"><span>Total</span><span>₹{selected.total.toFixed(2)}</span></div>
               </div>
-              
-              <div className="help-actions">
-                <button className="primary-btn" onClick={closeHelpModal}>Close</button>
+
+              <div className="mo-modal-actions">
+                <button className="mo-btn primary" onClick={() => handleReorder(selected)} disabled={reordering}>
+                  <FaRedo /> {reordering ? 'Placing…' : 'Reorder'}
+                </button>
+                <button className="mo-btn ghost" onClick={() => setSelected(null)}>Close</button>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Order = require('../models/Order');
 const MenuItem = require('../models/MenuItem');
 const { authenticateToken } = require('../middleware/auth');
@@ -28,23 +29,42 @@ router.post('/', authenticateToken, async (req, res) => {
     
     // Process each item
     for (const item of items) {
-      const menuItem = await MenuItem.findById(item.menuItemId);
-      if (!menuItem) {
-        return res.status(400).json({ message: `Menu item not found: ${item.menuItemId}` });
+      let name, price, menuItemId;
+
+      // Try DB lookup for valid ObjectIds
+      if (item.menuItemId && mongoose.isValidObjectId(item.menuItemId)) {
+        const menuItem = await MenuItem.findById(item.menuItemId);
+        if (menuItem) {
+          name = menuItem.name;
+          price = menuItem.price;
+          menuItemId = menuItem._id;
+        }
       }
-      
-      const itemTotal = menuItem.price * item.quantity;
+
+      // Fallback to client-provided data for hardcoded/non-DB items
+      if (!name || !price) {
+        if (!item.name || !item.price) {
+          return res.status(400).json({ message: `Item details missing for: ${item.menuItemId}` });
+        }
+        name = item.name;
+        price = Number(item.price);
+        menuItemId = undefined;
+      }
+
+      const itemTotal = price * item.quantity;
       subtotal += itemTotal;
-      
-      orderItems.push({
-        menuItemId: menuItem._id,
-        name: menuItem.name,
+
+      const orderItem = {
+        name,
         quantity: item.quantity,
-        price: menuItem.price,
+        price,
         totalPrice: itemTotal,
         options: item.options || [],
         specialInstructions: item.specialInstructions || ''
-      });
+      };
+      if (menuItemId) orderItem.menuItemId = menuItemId;
+
+      orderItems.push(orderItem);
     }
     
     // Calculate tax and delivery fee
@@ -73,7 +93,7 @@ router.post('/', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     console.error('Create order error:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: error.message || 'Server error' });
   }
 });
 
@@ -207,57 +227,69 @@ router.post('/reorder', authenticateToken, async (req, res) => {
       return res.status(404).json({ message: 'Original order not found' });
     }
     
-    // Get or create user's cart
-    const cart = await Cart.findOrCreateCart(req.user.id);
+    // Verify all items are still available
+    const orderItems = [];
+    let subtotal = 0;
     
-    // Clear existing cart items
-    await cart.clearCart();
-    
-    // Add original order items to cart
     for (const item of originalOrder.items) {
-      // Check if menu item still exists and is available
-      const menuItem = await MenuItem.findById(item.menuItemId);
-      
-      if (!menuItem) {
-        return res.status(400).json({ 
-          message: `Item '${item.name}' is no longer available in our menu` 
-        });
+      let name = item.name;
+      let price = item.price;
+      let menuItemId = item.menuItemId;
+
+      // Try to look up current price from DB if we have a valid menuItemId
+      if (item.menuItemId && mongoose.isValidObjectId(item.menuItemId)) {
+        const menuItem = await MenuItem.findById(item.menuItemId);
+        if (menuItem) {
+          if (!menuItem.isAvailable) {
+            return res.status(400).json({ 
+              message: `Item '${menuItem.name}' is currently unavailable` 
+            });
+          }
+          name = menuItem.name;
+          price = menuItem.price;
+          menuItemId = menuItem._id;
+        }
       }
       
-      if (!menuItem.isAvailable) {
-        return res.status(400).json({ 
-          message: `Item '${menuItem.name}' is currently unavailable` 
-        });
-      }
-      
-      // Parse options from strings back to objects
-      const options = item.options.map(optStr => {
-        const [name, choice] = optStr.split(': ');
-        return { name, choice, priceAdjustment: 0 }; // We don't have the original price adjustments
-      });
-      
-      // Add item to cart
-      await cart.addItem(menuItem, item.quantity, options, item.specialInstructions || '');
+      const itemTotal = price * item.quantity;
+      subtotal += itemTotal;
+
+      const orderItem = {
+        name,
+        quantity: item.quantity,
+        price,
+        totalPrice: itemTotal,
+        options: item.options || [],
+        specialInstructions: item.specialInstructions || ''
+      };
+      if (menuItemId) orderItem.menuItemId = menuItemId;
+
+      orderItems.push(orderItem);
     }
     
-    // Set delivery fee based on original order type
-    if (originalOrder.orderType === 'Takeaway') {
-      await cart.setDeliveryFee(40.00);
-    } else {
-      await cart.setDeliveryFee(0);
-    }
+    // Calculate tax and delivery fee using same logic as original order
+    const tax = subtotal * 0.18; // 18% tax
+    const deliveryFee = originalOrder.orderType === 'Takeaway' ? 40.00 : 0;
+    const total = subtotal + tax + deliveryFee;
     
-    // Apply any promo code if it was used in the original order
-    if (originalOrder.promoCodeUsed) {
-      await cart.applyPromoCode(originalOrder.promoCodeUsed, originalOrder.discount);
-    }
+    // Create new order with same details
+    const newOrder = new Order({
+      userId: req.user.id,
+      items: orderItems,
+      subtotal,
+      tax,
+      deliveryFee,
+      total,
+      orderType: originalOrder.orderType,
+      paymentMethod: originalOrder.paymentMethod,
+      address: originalOrder.address || ''
+    });
     
-    // Populate cart items
-    await cart.populate('items.menuItemId');
+    await newOrder.save();
     
-    res.status(200).json({
-      message: 'Items added to cart from previous order',
-      cart
+    res.status(201).json({
+      message: 'Order placed successfully',
+      order: newOrder
     });
   } catch (error) {
     console.error('Reorder error:', error);

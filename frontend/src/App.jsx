@@ -11,8 +11,7 @@ import HappyMeal from "./components/happy-meal/HappyMeal";
 import Profile from "./components/profile/Profile";
 import Orders from "./components/orders/Orders";
 import Checkout from "./components/checkout/Checkout";
-import Payment from "./components/payment/Payment";
-import OrderSuccess from "./components/order/OrderSuccess";
+import OrderSuccess from "./components/order/ordersuccess";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import mcdgif from "./assets/mcgif.gif";
 import { useAuth } from "./context/AuthContext";
@@ -44,32 +43,32 @@ function App() {
       .catch((err) => console.error("Failed to fetch menu:", err));
   }, []);
 
-  // if (loading) {
-  //   return (
-  //     <div className="loading-container">
-  //       <div className="fry-animation">
-  //         <div className="fry-box">
-  //           {[...Array(6)].map((_, i) => (
-  //             <div
-  //               key={i}
-  //               className="fry"
-  //               style={{ animationDelay: `${i * 0.2}s` }}
-  //             ></div>
-  //           ))}
-  //         </div>
-  //       </div>
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="fry-animation">
+          <div className="fry-box">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="fry"
+                style={{ animationDelay: `${i * 0.2}s` }}
+              ></div>
+            ))}
+          </div>
+        </div>
 
        
-  //       <img
-  //         src={mcdgif}
-  //         alt="McDonald's Fries"
-  //         className="mcd-fries-gif"
-  //       />
+        <img
+          src={mcdgif}
+          alt="McDonald's Fries"
+          className="mcd-fries-gif"
+        />
 
-  //       <p className="loading-text">Cooking Your Meal...</p>
-  //     </div>
-  //   );
-  // }
+        <p className="loading-text">Cooking Your Meal...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -92,7 +91,6 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/payment/:orderId" element={<Payment />} />
           <Route path="/order-success/:orderId" element={<OrderSuccess />} />
         </Route>
 

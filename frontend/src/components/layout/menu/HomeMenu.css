@@ -220,7 +220,6 @@
 }
 
 .view-details, .add-to-cart {
-  flex: 1;
   border: none;
   padding: 0.6rem 1.2rem;
   font-size: 1rem;

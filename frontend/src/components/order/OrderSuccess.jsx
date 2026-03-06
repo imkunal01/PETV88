@@ -1,247 +1,142 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaCheckCircle, FaReceipt, FaHome, FaUtensils } from 'react-icons/fa';
-import './OrderSuccess.css';
+import { FaCheckCircle, FaListAlt, FaHome, FaUtensils } from 'react-icons/fa';
+import './ordersuccess.css';
+
+const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+
+const getAuthHeaders = () => {
+  const headers = { 'Content-Type': 'application/json' };
+  const token = localStorage.getItem('token');
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  return headers;
+};
 
 const OrderSuccess = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
-  
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
+    if (!orderId) return;
     const fetchOrder = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}`, {
-          method: 'GET',
+        const res = await fetch(`${API_BASE}/api/orders/${orderId}`, {
           credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          }
+          headers: getAuthHeaders(),
         });
-        
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Failed to fetch order');
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || 'Failed to fetch order');
         }
-        
-        const data = await response.json();
-        setOrder(data);
+        setOrder(await res.json());
       } catch (err) {
-        console.error('Error fetching order:', err);
         setError(err.message);
       } finally {
         setIsLoading(false);
       }
     };
-    
-    if (orderId) {
-      fetchOrder();
-    }
+    fetchOrder();
   }, [orderId]);
-  
+
   if (isLoading) {
     return (
-      <div className="order-success-page loading">
-        <div className="loader"></div>
+      <div className="os-page os-loading">
+        <div className="os-loader" />
         <p>Loading order details...</p>
       </div>
     );
   }
-  
-  if (error) {
+
+  if (error || !order) {
     return (
-      <div className="order-success-page error">
-        <div className="error-icon">❌</div>
-        <h2>Error</h2>
-        <p>{error}</p>
-        <button onClick={() => navigate('/menu')}>Return to Menu</button>
+      <div className="os-page os-error">
+        <div className="os-error-icon">❌</div>
+        <h2>{error || 'Order not found'}</h2>
+        <button onClick={() => navigate('/menu')} className="os-btn secondary">Back to Menu</button>
       </div>
     );
   }
-  
-  if (!order) {
-    return (
-      <div className="order-success-page error">
-        <div className="error-icon">❓</div>
-        <h2>Order Not Found</h2>
-        <p>We couldn't find the order you're looking for.</p>
-        <button onClick={() => navigate('/menu')}>Return to Menu</button>
-      </div>
-    );
-  }
-  
-  // Format date
-  const formatDate = (dateString) => {
-    const options = { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+
+  const formatDate = (d) =>
+    new Date(d).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+  const estTime = () => {
+    if (order.estimatedDeliveryTime) return formatDate(order.estimatedDeliveryTime);
+    const t = new Date(order.createdAt);
+    t.setMinutes(t.getMinutes() + (order.orderType === 'Takeaway' ? 30 : 15));
+    return formatDate(t);
   };
-  
-  // Calculate estimated delivery time
-  const getEstimatedDelivery = () => {
-    if (order.estimatedDeliveryTime) {
-      return formatDate(order.estimatedDeliveryTime);
-    }
-    
-    if (order.orderType === 'Delivery') {
-      const deliveryTime = new Date(order.createdAt);
-      deliveryTime.setMinutes(deliveryTime.getMinutes() + 30);
-      return formatDate(deliveryTime);
-    } else {
-      const pickupTime = new Date(order.createdAt);
-      pickupTime.setMinutes(pickupTime.getMinutes() + 15);
-      return formatDate(pickupTime);
-    }
-  };
-  
+
   return (
-    <motion.div 
-      className="order-success-page"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <div className="order-success-container">
-        <motion.div 
-          className="success-icon"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-        >
-          <FaCheckCircle />
+    <div className="os-page">
+      {/* Confetti dots */}
+      <div className="os-confetti" aria-hidden="true">
+        {[...Array(20)].map((_, i) => (
+          <span key={i} className="os-dot" style={{
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 2}s`,
+            animationDuration: `${2 + Math.random() * 2}s`,
+            background: ['#DA291C', '#FFC72C', '#FF5C00', '#4CAF50', '#2196F3'][i % 5],
+          }} />
+        ))}
+      </div>
+
+      <motion.div className="os-card" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        {/* Success header */}
+        <motion.div className="os-hero" initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 180 }}>
+          <div className="os-check"><FaCheckCircle /></div>
         </motion.div>
-        
-        <motion.h1
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          Order Placed Successfully!
+
+        <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+          Order Placed!
         </motion.h1>
-        
-        <motion.div 
-          className="order-details"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          <div className="order-number">
-            <span>Order Number:</span> #{order.orderNumber}
-          </div>
-          
-          <div className="order-date">
-            <span>Order Date:</span> {formatDate(order.createdAt)}
-          </div>
-          
-          <div className="order-type">
-            <span>Order Type:</span> {order.orderType}
-          </div>
-          
-          <div className="order-status">
-            <span>Status:</span> <span className="status-badge">{order.status}</span>
-          </div>
-          
-          <div className="delivery-time">
-            <span>{order.orderType === 'Delivery' ? 'Estimated Delivery:' : 'Pickup Time:'}</span> 
-            {getEstimatedDelivery()}
-          </div>
-          
-          <div className="payment-info">
-            <span>Payment Method:</span> {order.paymentMethod}
-          </div>
-          
-          <div className="payment-status">
-            <span>Payment Status:</span> 
-            <span className={`payment-badge ${order.paymentStatus.toLowerCase()}`}>
-              {order.paymentStatus}
-            </span>
-          </div>
-        </motion.div>
-        
-        <motion.div 
-          className="order-summary"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
-          <h2>Order Summary</h2>
-          <div className="order-items">
-            {order.items.map((item, index) => (
-              <div className="order-item" key={index}>
-                <div className="item-name">{item.name}</div>
-                <div className="item-quantity">x{item.quantity}</div>
-                <div className="item-price">₹{item.price.toFixed(2)}</div>
+        <p className="os-subtitle">Thank you! Your order is being prepared.</p>
+
+        {/* Info grid */}
+        <div className="os-info-grid">
+          <div><span>Order #</span><strong>{order.orderNumber}</strong></div>
+          <div><span>Date</span><strong>{formatDate(order.createdAt)}</strong></div>
+          <div><span>Type</span><strong>{order.orderType}</strong></div>
+          <div><span>Status</span><strong className="os-status-badge">{order.status}</strong></div>
+          <div><span>{order.orderType === 'Takeaway' ? 'Est. Delivery' : 'Pickup Time'}</span><strong>{estTime()}</strong></div>
+          <div><span>Payment</span><strong>{order.paymentMethod} · <span className={`os-pay-badge ${order.paymentStatus?.toLowerCase()}`}>{order.paymentStatus}</span></strong></div>
+        </div>
+
+        {/* Items */}
+        <div className="os-items-section">
+          <h3>Order Summary</h3>
+          <div className="os-items">
+            {order.items.map((item, i) => (
+              <div key={i} className="os-item-row">
+                <span className="os-item-name">{item.name}</span>
+                <span className="os-item-qty">x{item.quantity}</span>
+                <span className="os-item-price">₹{item.price.toFixed(2)}</span>
               </div>
             ))}
           </div>
-          
-          <div className="order-totals">
-            <div className="total-row">
-              <span>Subtotal:</span>
-              <span>₹{order.subtotal.toFixed(2)}</span>
-            </div>
-            <div className="total-row">
-              <span>Tax (18%):</span>
-              <span>₹{order.tax.toFixed(2)}</span>
-            </div>
-            {order.deliveryFee > 0 && (
-              <div className="total-row">
-                <span>Delivery Fee:</span>
-                <span>₹{order.deliveryFee.toFixed(2)}</span>
-              </div>
-            )}
-            {order.discount > 0 && (
-              <div className="total-row discount">
-                <span>Discount:</span>
-                <span>-₹{order.discount.toFixed(2)}</span>
-              </div>
-            )}
-            <div className="total-row grand-total">
-              <span>Total:</span>
-              <span>₹{order.total.toFixed(2)}</span>
-            </div>
+
+          <div className="os-totals">
+            <div className="os-total-row"><span>Subtotal</span><span>₹{order.subtotal.toFixed(2)}</span></div>
+            <div className="os-total-row"><span>Tax</span><span>₹{order.tax.toFixed(2)}</span></div>
+            {order.deliveryFee > 0 && <div className="os-total-row"><span>Delivery</span><span>₹{order.deliveryFee.toFixed(2)}</span></div>}
+            {order.discount > 0 && <div className="os-total-row discount"><span>Discount</span><span>-₹{order.discount.toFixed(2)}</span></div>}
+            <div className="os-total-row grand"><span>Total</span><span>₹{order.total.toFixed(2)}</span></div>
           </div>
-        </motion.div>
-        
-        <motion.div 
-          className="action-buttons"
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.6 }}
-        >
-          <button 
-            className="view-order-btn"
-            onClick={() => navigate(`/orders/${orderId}`)}
-          >
-            <FaReceipt /> View Order Details
-          </button>
-          
-          <button 
-            className="track-order-btn"
-            onClick={() => navigate('/orders')}
-          >
-            <FaUtensils /> My Orders
-          </button>
-          
-          <button 
-            className="home-btn"
-            onClick={() => navigate('/')}
-          >
-            <FaHome /> Return Home
-          </button>
-        </motion.div>
-      </div>
-    </motion.div>
+        </div>
+
+        {/* Actions */}
+        <div className="os-actions">
+          <button className="os-btn primary" onClick={() => navigate('/orders')}><FaListAlt /> My Orders</button>
+          <button className="os-btn secondary" onClick={() => navigate('/menu')}><FaUtensils /> Order More</button>
+          <button className="os-btn ghost" onClick={() => navigate('/')}><FaHome /> Home</button>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 

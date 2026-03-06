@@ -1,12 +1,22 @@
 const BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
 
+const authHeaders = (extra = {}) => {
+  const headers = { 'Content-Type': 'application/json', ...extra };
+  const token = localStorage.getItem('token');
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  return headers;
+};
+
 export const fetchMenu = async () => {
   const res = await fetch(`${BASE_URL}/api/menu`);
   return res.json();
 };
 
 export const fetchOrders = async () => {
-  const res = await fetch(`${BASE_URL}/api/orders`);
+  const res = await fetch(`${BASE_URL}/api/orders`, {
+    credentials: 'include',
+    headers: authHeaders()
+  });
   return res.json();
 };
 
@@ -31,7 +41,8 @@ export const signupUser = async (userData) => {
 export const placeOrder = async (order) => {
   const res = await fetch(`${BASE_URL}/api/orders`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: authHeaders(),
+    credentials: 'include',
     body: JSON.stringify(order),
   });
   return res.json();

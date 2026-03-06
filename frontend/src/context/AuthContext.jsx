@@ -2,43 +2,68 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
+const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+
+// Helper: build headers with Bearer token when available
+const authHeaders = (extra = {}) => {
+  const headers = { 'Content-Type': 'application/json', ...extra };
+  const token = localStorage.getItem('token');
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  return headers;
+};
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Restore user from localStorage instantly — no loading spinner on refresh
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('user');
+      const token = localStorage.getItem('token');
+      return saved && token ? JSON.parse(saved) : null;
+    } catch { return null; }
+  });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Check if user is already logged in
+  // Sync user → localStorage (never touches token — token only cleared explicitly)
   useEffect(() => {
-    const checkLoggedIn = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/user`, {
-          method: 'GET',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
 
-        if (response.ok) {
-          const userData = await response.json();
-          setUser(userData);
-        } else {
+  // Background validation: if server says token is invalid, clear session silently
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) return; // nothing to validate
+
+    const controller = new AbortController();
+    fetch(`${API_BASE}/api/auth/user`, {
+      credentials: 'include',
+      headers: authHeaders(),
+      signal: controller.signal,
+    })
+      .then((res) => {
+        if (res.status === 401 || res.status === 403) {
+          // Token is definitively invalid — clear everything
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
           setUser(null);
+        } else if (res.ok) {
+          // Optionally refresh user data from server
+          return res.json().then((fresh) => setUser(fresh));
         }
-      } catch (err) {
-        console.error('Auth check error:', err);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
+        // On other errors (500, network), do nothing — keep cached session
+      })
+      .catch(() => {
+        // Network error / abort — keep user logged in
+      });
 
-    checkLoggedIn();
+    return () => controller.abort();
   }, []);
 
   // Register user
@@ -47,12 +72,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
+      const response = await fetch(`${API_BASE}/api/auth/register`, {
         method: 'POST',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
       });
 
@@ -62,6 +85,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Registration failed');
       }
 
+      localStorage.setItem('token', data.token);
       setUser(data.user);
       navigate('/');
       return data;
@@ -79,12 +103,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
+      const response = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
 
@@ -94,6 +116,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Login failed');
       }
 
+      localStorage.setItem('token', data.token);
       setUser(data.user);
       navigate('/');
       return data;
@@ -111,26 +134,20 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
+      await fetch(`${API_BASE}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: authHeaders()
       });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || 'Logout failed');
-      }
-
-      setUser(null);
-      navigate('/');
     } catch (err) {
-      setError(err.message);
       console.error('Logout error:', err);
     } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('mcd_cart');
+      setUser(null);
       setLoading(false);
+      navigate('/');
     }
   };
 
@@ -140,12 +157,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/update-profile`, {
+      const response = await fetch(`${API_BASE}/api/auth/update-profile`, {
         method: 'PUT',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: authHeaders(),
         body: JSON.stringify(userData)
       });
 
@@ -155,7 +170,6 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Profile update failed');
       }
 
-      // Update the user state with the new data
       setUser(prevUser => ({
         ...prevUser,
         ...data.user

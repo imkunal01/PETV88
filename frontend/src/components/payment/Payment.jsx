@@ -18,7 +18,7 @@ const Payment = () => {
     const fetchOrder = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/${orderId}` || `http://localhost:5001/api/orders/${orderId}`, {
           method: 'GET',
           credentials: 'include',
           headers: {
@@ -50,7 +50,7 @@ const Payment = () => {
   const initializeRazorpay = async () => {
     try {
       // Fetch Razorpay key from backend
-      const keyResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payments/key`, {
+      const keyResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payments/key` || `http://localhost:5001/api/payments/key`, {
         method: 'GET',
         credentials: 'include',
       });
@@ -62,7 +62,7 @@ const Payment = () => {
       const keyData = await keyResponse.json();
       
       // Create Razorpay order
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payments/create-order`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payments/create-order` || `http://localhost:5001/api/payments/create-order`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -120,7 +120,7 @@ const Payment = () => {
   const handlePaymentSuccess = async (response) => {
     try {
       // Verify payment with backend
-      const verifyResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payments/verify`, {
+      const verifyResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/payments/verify` || `http://localhost:5001/api/payments/varify`, {
         method: 'POST',
         credentials: 'include',
         headers: {

@@ -6,7 +6,7 @@
 }
 
 body {
-  padding-top: 100px; /* Compensate for fixed navbar */
+  padding-top: 48px; /* Compensate for fixed navbar */
   overflow-x: hidden;
 }
 
@@ -30,14 +30,14 @@ body {
   left: 0;
   width: 100%;
   background-color: white;
-  padding: 20px 0;
-  z-index: 999;
+  padding: 6px 0;
+  z-index: 9999;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 /* Logo */
 .mcdlogo img {
-  width: 100px;
+  width: 60px;
   height: auto;
   transition: transform 0.3s;
 }
@@ -229,44 +229,121 @@ body {
   }
 }
 
+/* Mobile bottom pill nav - hidden on desktop */
+.mobile-bottom-nav {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .container {
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-wrap: nowrap;
+    gap: 0;
   }
 
-  .navlinks {
-    width: 100%;
-    margin-top: 10px;
+  /* Hide top navlinks and auth on mobile */
+  .navlinks,
+  .auth-links,
+  .user-menu,
+  .cart-icon {
+    display: none;
   }
 
-  .navlinks ul {
+  /* Only show logo in top bar on mobile */
+  .navbar {
+    padding: 4px 0;
+  }
+
+  .container {
+    justify-content: center;
+  }
+
+  body {
+    padding-bottom: 70px; /* Space for bottom nav */
+  }
+
+  /* Show bottom pill nav */
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 24px);
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.226);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 28px;
+    padding: 6px 8px;
     justify-content: space-around;
-    gap: 10px;
+    align-items: center;
+    z-index: 9999;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
   }
 
-  .navlinks a {
-    font-size: 14px;
-    padding: 6px;
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #888;
+    font-size: 0.65rem;
+    font-weight: 600;
+    gap: 2px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    transition: all 0.25s ease;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    min-width: 52px;
   }
 
-  .auth-links {
-    gap: 0.5rem;
+  .bottom-nav-item svg {
+    font-size: 1.15rem;
+    transition: transform 0.25s ease;
   }
 
-  .login-btn,
-  .signup-btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
+  .bottom-nav-item.active {
+    color: #e4002b;
+    background: rgba(228, 0, 43, 0.08);
+  }
+
+  .bottom-nav-item.active svg {
+    transform: scale(1.15);
+  }
+
+  .bottom-nav-item.cart-tab {
+    color: #FF5C00;
+  }
+
+  .bottom-nav-item.cart-tab.has-items {
+    color: #FF5C00;
+  }
+
+  .bottom-cart-badge {
+    position: absolute;
+    top: 0;
+    right: 6px;
+    background: #e4002b;
+    color: white;
+    font-size: 0.55rem;
+    font-weight: 700;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
   }
 }
 
 @media (max-width: 480px) {
-  .auth-links {
-    display: none;
-  }
-
-  .user-info span {
-    display: none;
+  .mobile-bottom-nav {
+    width: calc(100% - 16px);
+    bottom: 8px;
   }
 }

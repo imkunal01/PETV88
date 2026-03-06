@@ -344,3 +344,254 @@
     font-size: 1rem;
   }
 }
+
+/* Orders Tab Styles */
+.orders-info {
+  width: 100%;
+}
+
+.view-all-button {
+  background-color: transparent;
+  color: #FF5C00;
+  border: 2px solid #FF5C00;
+  padding: 0.7rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.view-all-button:hover {
+  background-color: #FF5C00;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.loading-orders {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.loading-orders p {
+  margin-top: 1rem;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.no-orders-profile {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  border: 2px dashed #ddd;
+}
+
+.no-orders-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.no-orders-profile p {
+  color: #666;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.browse-menu-button {
+  background-color: #FF5C00;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.browse-menu-button:hover {
+  background-color: #E65100;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 81, 0, 0.2);
+}
+
+.orders-list-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.order-card-profile {
+  background-color: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.order-card-profile:hover {
+  border-color: #FF5C00;
+  box-shadow: 0 4px 16px rgba(255, 92, 0, 0.15);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.order-number-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.order-number-profile .label {
+  color: #777;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.order-number-profile strong {
+  color: #333;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.order-status-badge {
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.order-status-badge.status-completed,
+.order-status-badge.status-delivered {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.order-status-badge.status-processing {
+  background-color: #2196F3;
+  color: white;
+}
+
+.order-status-badge.status-preparing {
+  background-color: #FF9800;
+  color: white;
+}
+
+.order-status-badge.status-ready {
+  background-color: #9C27B0;
+  color: white;
+}
+
+.order-status-badge.status-cancelled {
+  background-color: #F44336;
+  color: white;
+}
+
+.order-status-badge.status-default {
+  background-color: #757575;
+  color: white;
+}
+
+.order-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.order-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.meta-label {
+  color: #777;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.meta-value {
+  color: #333;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.order-items-preview {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.items-count {
+  color: #FF5C00;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.item-preview {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.more-items {
+  color: #999;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+/* Responsive styles for orders */
+@media (max-width: 768px) {
+  .order-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .order-meta {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .order-card-profile {
+    padding: 1rem;
+  }
+  
+  .order-number-profile strong {
+    font-size: 1.1rem;
+  }
+  
+  .order-status-badge {
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+  }
+}

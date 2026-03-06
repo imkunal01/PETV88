@@ -11,7 +11,6 @@ const { initScheduledTasks } = require('./utils/scheduledTasks');
 const authRoutes = require('./routes/auth');
 const menuRoutes = require('./routes/menu');
 const orderRoutes = require('./routes/orders');
-const paymentRoutes = require('./routes/payments');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -45,10 +44,7 @@ app.use(cors({
 app.use(cookieParser());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGO_URI)
 .then(() => console.log('MongoDB connected successfully'))
 .catch(err => console.error('MongoDB connection error:', err));
 
@@ -56,7 +52,27 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use('/api/auth', authRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/orders', orderRoutes);
-app.use('/api/payments', paymentRoutes);
+
+// 404 handler - must be after all routes
+app.use((req, res) => {
+  res.status(404).json({ message: 'Route not found' });
+});
+
+// Global error handler - must be last
+app.use((err, req, res, next) => {
+  console.error('Error:', err.message);
+  
+  // CORS errors
+  if (err.message.includes('CORS blocked')) {
+    return res.status(403).json({ message: err.message });
+  }
+  
+  // Default error response
+  res.status(err.status || 500).json({ 
+    message: err.message || 'Internal server error',
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+  });
+});
 
 // Start server
 app.listen(PORT, () => {
