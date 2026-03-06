@@ -6,7 +6,6 @@ import "./home.css";
 import mealImage from "../../../assets/ranveer.png";
 import mealvid from "../../../assets/happymeal.mp4";
 import HomeMenu from "../menu/HomeMenu";
-import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 const Home = () => {
   // Refs for scroll sections
@@ -89,6 +88,23 @@ const Home = () => {
     },
   };
 
+  const staggerContainer = {
+    hidden: {},
+    visible: {
+      transition: { staggerChildren: 0.15, delayChildren: 0.1 },
+    },
+  };
+
+  const staggerItem = {
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  };
+
+  const scaleIn = {
+    hidden: { opacity: 0, scale: 0.92 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] } },
+  };
+
   return (
     <div className="home-container">
       {/* Navigation dots */}
@@ -127,18 +143,18 @@ const Home = () => {
           className="home-left"
           initial="hidden"
           animate={heroControls}
-          variants={fadeInUp}
+          variants={staggerContainer}
         >
           <div className="text-wrapper">
-            <h1>
+            <motion.h1 variants={staggerItem}>
               <span className="text-outline">The</span>
               <br />
               <span className="text-solid">Happy Meal</span>
-            </h1>
-            <p className="hero-subtitle">
+            </motion.h1>
+            <motion.p className="hero-subtitle" variants={staggerItem}>
               Delicious food that brings a smile to your face
-            </p>
-            <div className="hero-buttons">
+            </motion.p>
+            <motion.div className="hero-buttons" variants={staggerItem}>
               <button
                 className="order-now-btn"
                 onClick={() => handleNavClick("menu")}
@@ -151,7 +167,7 @@ const Home = () => {
               >
                 Learn More
               </button>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
 
@@ -159,7 +175,7 @@ const Home = () => {
           className="home-right"
           initial="hidden"
           animate={heroControls}
-          variants={fadeInUp}
+          variants={scaleIn}
         >
           <video
             src={mealvid}
@@ -253,44 +269,20 @@ const Home = () => {
           variants={fadeInUp}
         >
           <div className="contact-container">
-            <h2>Find Us</h2>
-            <div className="contact-content">
-              <div className="contact-info">
-                <div className="contact-item">
-                  <h3>Address</h3>
-                  <p>123 McDonald's Street</p>
-                  <p>New Delhi, India 110001</p>
-                </div>
-                <div className="contact-item">
-                  <h3>Hours</h3>
-                  <p>Monday - Sunday: 10:00 AM - 11:00 PM</p>
-                </div>
-                <div className="contact-item">
-                  <h3>Contact</h3>
-                  <p>Phone: +91 123-456-7890</p>
-                  <p>Email: info@mcdonaldsindia.com</p>
-                </div>
-              </div>
-              <div className="map-placeholder">
-                <LoadScript
-                  googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
-                >
-                  <GoogleMap
-                    mapContainerStyle={mapContainerStyle}
-                    center={center}
-                    zoom={13}
-                  >
-                    {locations.map((location, index) => (
-                      <Marker
-                        key={index}
-                        position={{ lat: location.lat, lng: location.lng }}
-                        title={location.name}
-                      />
-                    ))}
-                  </GoogleMap>
-                </LoadScript>
-              </div>
-            </div>
+            <motion.h2 variants={staggerItem}>Find Us</motion.h2>
+            <motion.div className="contact-grid" variants={staggerContainer} initial="hidden" animate={contactControls}>
+              {[
+                { icon: "📍", title: "Visit Us", lines: ["123 McDonald's Street", "New Delhi, India 110001"] },
+                { icon: "🕐", title: "Open Hours", lines: ["Monday - Sunday", "10:00 AM - 11:00 PM"] },
+                { icon: "📞", title: "Get in Touch", lines: ["+91 123-456-7890", "info@mcdonaldsindia.com"] },
+              ].map((card, i) => (
+                <motion.div className="contact-card" key={i} variants={staggerItem} whileHover={{ y: -6, boxShadow: "0 12px 32px rgba(0,0,0,0.12)" }}>
+                  <div className="contact-card-icon">{card.icon}</div>
+                  <h3>{card.title}</h3>
+                  {card.lines.map((line, j) => <p key={j}>{line}</p>)}
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </motion.div>
       </section>
@@ -300,19 +292,3 @@ const Home = () => {
 
 export default Home;
 
-const mapContainerStyle = {
-  width: "100%",
-  height: "400px",
-  borderRadius: "12px",
-};
-
-const center = {
-  lat: 28.6139, // Delhi coordinates
-  lng: 77.209,
-};
-
-const locations = [
-  { lat: 28.6139, lng: 77.209, name: "McDonald's CP" },
-  { lat: 28.6292, lng: 77.2195, name: "McDonald's Mandi House" },
-  { lat: 28.6304, lng: 77.2177, name: "McDonald's ITO" },
-];

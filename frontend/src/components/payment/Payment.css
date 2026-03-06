@@ -1,7 +1,7 @@
 .payment-page {
   padding: 2rem 1rem;
   background-color: #f9f9f9;
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 48px);
   display: flex;
   justify-content: center;
   align-items: center;

@@ -33,6 +33,12 @@ body {
   padding: 6px 0;
   z-index: 9999;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 /* Logo */
@@ -59,12 +65,29 @@ body {
   color: #FFCC00;
   font-weight: bold;
   font-size: 20px;
-  transition: color 0.3s;
+  transition: color 0.3s, transform 0.3s;
   padding: 10px;
+  position: relative;
+}
+.navlinks a::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 10px;
+  right: 10px;
+  height: 2px;
+  background: #e4002b;
+  border-radius: 1px;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease;
 }
 .navlinks a:hover {
   color: red;
-  text-decoration: overline;
+  transform: translateY(-1px);
+}
+.navlinks a:hover::after {
+  transform: scaleX(1);
 }
 .navlinks a:active {
   color: #000;
@@ -244,7 +267,8 @@ body {
   .navlinks,
   .auth-links,
   .user-menu,
-  .cart-icon {
+  .cart-icon,
+  .nav-right {
     display: none;
   }
 
@@ -313,6 +337,13 @@ body {
 
   .bottom-nav-item.active svg {
     transform: scale(1.15);
+    animation: navBounce 0.4s ease;
+  }
+
+  @keyframes navBounce {
+    0% { transform: scale(0.8); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1.15); }
   }
 
   .bottom-nav-item.cart-tab {

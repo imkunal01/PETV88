@@ -4,32 +4,27 @@ import './CategoryFilter.css';
 
 const CategoryFilter = ({ categories, selectedCategory, setSelectedCategory, isVegOnly, setIsVegOnly }) => {
   return (
-    <div className="filter-container">
-      <div className="categories">
+    <div className="filter-bar">
+      <div className="categories-scroll">
         {categories.map((category) => (
           <motion.button
             key={category}
-            className={`category-btn ${selectedCategory === category ? 'active' : ''}`}
+            className={`cat-pill ${selectedCategory === category ? 'active' : ''}`}
             onClick={() => setSelectedCategory(category)}
-            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             {category}
           </motion.button>
         ))}
       </div>
-      
-      <div className="veg-filter">
-        <label className="veg-label">
-          <input
-            type="checkbox"
-            checked={isVegOnly}
-            onChange={() => setIsVegOnly(!isVegOnly)}
-          />
-          <span className="veg-text">Veg Only</span>
-          <span className="veg-icon">🟢</span>
-        </label>
-      </div>
+
+      <label className="veg-toggle">
+        <span className="veg-toggle-icon">●</span>
+        <span className="veg-toggle-label">Veg</span>
+        <div className={`toggle-track ${isVegOnly ? 'on' : ''}`} onClick={() => setIsVegOnly(!isVegOnly)}>
+          <div className="toggle-thumb" />
+        </div>
+      </label>
     </div>
   );
 };

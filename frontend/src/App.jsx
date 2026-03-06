@@ -1,6 +1,7 @@
 import "./App.css";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 import Nav from "./components/header/navbar/nav.jsx";
 import Home from "./components/layout/Home/home.jsx";
@@ -18,6 +19,18 @@ import { useAuth } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import { fetchMenu } from "./api";
 import About from "./components/pages/about/about.jsx";
+
+const pageVariants = {
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.25, 0.1, 0.25, 1] } },
+  exit: { opacity: 0, y: -12, transition: { duration: 0.2 } },
+};
+
+const PT = ({ children }) => (
+  <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" style={{ width: "100%" }}>
+    {children}
+  </motion.div>
+);
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -77,25 +90,27 @@ function App() {
       <CartProvider>
         {!hideNavbar && <Nav />}
 
-        <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/happy-meal" element={<HappyMeal />} />
-        <Route path="/about" element={<About />} />
-          <Route path="/menu" element={<Menu />} />
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+          {/* Public Routes */}
+          <Route path="/" element={<PT><Home /></PT>} />
+          <Route path="/login" element={<PT><Login /></PT>} />
+          <Route path="/signup" element={<PT><Signup /></PT>} />
+          <Route path="/happy-meal" element={<PT><HappyMeal /></PT>} />
+          <Route path="/about" element={<PT><About /></PT>} />
+          <Route path="/menu" element={<PT><Menu /></PT>} />
 
-        {/* Protected Routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/order-success/:orderId" element={<OrderSuccess />} />
-        </Route>
+          {/* Protected Routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/profile" element={<PT><Profile /></PT>} />
+            <Route path="/orders" element={<PT><Orders /></PT>} />
+            <Route path="/checkout" element={<PT><Checkout /></PT>} />
+            <Route path="/order-success/:orderId" element={<PT><OrderSuccess /></PT>} />
+          </Route>
 
-        <Route path="*" element={<h1>Oops! Page Not Found</h1>} />
-        </Routes>
+          <Route path="*" element={<PT><h1>Oops! Page Not Found</h1></PT>} />
+          </Routes>
+        </AnimatePresence>
       </CartProvider>
     </>
   );

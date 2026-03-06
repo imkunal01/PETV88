@@ -2,7 +2,7 @@
 .ck-page {
   padding: 2rem 1rem;
   background: #f4f4f4;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 48px);
   display: flex;
   justify-content: center;
 }

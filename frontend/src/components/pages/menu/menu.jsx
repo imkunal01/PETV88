@@ -206,10 +206,15 @@ const Menu = () => {
 
   return (
     <div className="menu-page">
-      <div className="menu-header">
+      <motion.div 
+        className="menu-header"
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+      >
         <h1>Our Menu</h1>
         <p>Discover the delicious world of McDonald's</p>
-      </div>
+      </motion.div>
       
       <CategoryFilter 
         categories={categories}
