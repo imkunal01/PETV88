@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaCheckCircle, FaListAlt, FaHome, FaUtensils } from 'react-icons/fa';
-import './ordersuccess.css';
+import './OrderSuccess.css';
 
 const API_BASE = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
 

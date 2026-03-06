@@ -12,7 +12,7 @@ import HappyMeal from "./components/happy-meal/HappyMeal";
 import Profile from "./components/profile/Profile";
 import Orders from "./components/orders/Orders";
 import Checkout from "./components/checkout/Checkout";
-import OrderSuccess from "./components/order/ordersuccess";
+import OrderSuccess from "./components/order/OrderSuccess";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import mcdgif from "./assets/mcgif.gif";
 import { useAuth } from "./context/AuthContext";
